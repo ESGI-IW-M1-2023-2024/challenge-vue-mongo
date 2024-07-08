@@ -1,0 +1,8 @@
+{
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#2C2C3D",
+    "titleBar.activeBackground": "#3E3E55",
+    "titleBar.activeForeground": "#FAFAFB"
+  },
+  "cSpell.words": ["hono", "Hono"]
+}
