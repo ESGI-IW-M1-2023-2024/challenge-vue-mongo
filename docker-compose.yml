@@ -12,8 +12,8 @@ services:
     build:
       context: ./infra/dev/vite
     ports:
-      - 5173:5173
-    command: sh -c "npm install && npm run dev"
+      - 3001:3001
+    command: sh -c "npm install && npm run dev -- -o -p 3001"
     volumes:
       - ./front:/var/www/front
 
