@@ -24,7 +24,8 @@ app.use(
       try {
         jwt.verify(token, myEnv.secretKey);
         return true;
-      } catch {
+      } catch (e: any) {
+        console.log(e);
         return false;
       }
     },
