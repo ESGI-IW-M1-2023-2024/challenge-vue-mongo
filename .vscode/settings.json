@@ -4,5 +4,6 @@
     "titleBar.activeBackground": "#3E3E55",
     "titleBar.activeForeground": "#FAFAFB"
   },
-  "cSpell.words": ["hono", "Hono"]
+  "cSpell.words": ["hono", "Hono"],
+  "conventionalCommits.scopes": ["Swagger", "Bruno"]
 }
