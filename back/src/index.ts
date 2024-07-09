@@ -7,11 +7,15 @@ import jwt from 'jsonwebtoken';
 
 import users from './routes/users';
 import auth from './routes/auth';
+import { cors } from 'hono/cors'
 
 const app = new Hono();
 const port = myEnv.port;
 await DbConnect();
 console.log(`🚀 Server is running on http://localhost:${port}`);
+
+app.use('/api/*', cors());
+
 
 app.use(
   '/api/users/*',
