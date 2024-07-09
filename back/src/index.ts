@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 
 import users from './routes/users';
 import auth from './routes/auth';
+import like from './routes/likes';
 
 const app = new Hono();
 const port = myEnv.port;
@@ -30,6 +31,8 @@ app.use(
 
 app.route('/api', users);
 app.route('/api', auth);
+
+app.route('/api', like);
 
 app.use('*', async (c) => {
   c.json({ msg: '404 not found' });
