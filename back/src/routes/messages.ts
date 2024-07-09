@@ -1,0 +1,55 @@
+import { Hono } from 'hono';
+import { Message } from '../models/message';
+import { jsxAttr } from 'hono/jsx/jsx-runtime';
+
+const api = new Hono().basePath('/messages');
+
+api.get('/', async (c) => {
+  const messages = await Message.find();
+  return c.json(messages, 200);
+});
+
+api.get('/:id', async (c) => {
+  const { id } = c.req.param();
+  try {
+    const message = await Message.findById(id);
+    return c.json(message, 200);
+  } catch (err: any) {
+    return c.json({ message: 'Message not found', error: err.message }, 404);
+  }
+});
+
+api.post('/', async (c) => {
+  const { idIssue, title, content } = await c.req.json();
+  try {
+    const message = new Message({ idIssue, title, content });
+    await message.save();
+    return c.json(message, 201);
+  } catch (err: any) {
+    return c.json({ message: 'Error creating message', error: err.message }, 400);
+  }
+});
+
+api.patch('/:id', async (c) => {
+  const { id } = c.req.param();
+  const { title, content } = await c.req.json();
+  try {
+    const message = await Message.findByIdAndUpdate(id, { title, content }, { new: true });
+    return c.json(message, 200);
+  }
+  catch (err: any) {
+    return c.json({ message: 'Error updating message', error: err.message }, 400);
+  }
+});
+
+api.delete('/:id', async (c) => {
+  const { id } = c.req.param();
+  try {
+    await Message.findByIdAndDelete(id);
+    return c.json({ message: 'Message deleted successfully' }, 200);
+  } catch (err: any) {
+    return c.json({ message: 'Error deleting message', error: err.message }, 400);
+  }
+});
+
+export default api;
