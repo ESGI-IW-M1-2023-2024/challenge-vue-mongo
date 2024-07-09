@@ -29,6 +29,21 @@ app.use(
   }),
 );
 
+app.use(
+  '/api/likes/*',
+  bearerAuth({
+    verifyToken: (token) => {
+      try {
+        jwt.verify(token, myEnv.secretKey);
+        return true;
+      } catch (e: any) {
+        console.log(e);
+        return false;
+      }
+    },
+  }),
+);
+
 app.route('/api', users);
 app.route('/api', auth);
 
