@@ -6,18 +6,18 @@ import { ILike, likeSchema } from './like';
 // TODO : add roles
 
 interface IUser {
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
-  biography: string;
-  availability: string;
-  technologies: ITechnology[];
+  biography?: string;
+  availability?: string;
+  technologies?: ITechnology[];
   tokens: number;
-  issues: Types.ObjectId;
-  comments: Types.ObjectId;
-  githubLink: string;
-  stackOverflowLink: string;
+  issues: Types.ObjectId[];
+  comments?: Types.ObjectId[];
+  githubLink?: string;
+  stackOverflowLink?: string;
   likes: ILike[];
   createdAt: Date;
   updatedAt: Date;
@@ -27,17 +27,17 @@ interface IUser {
 const userSchema = new Schema<IUser>(
   {
     firstName: { type: String, required: true },
-    lastName: { type: String },
+    lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true },
     biography: { type: String },
     availability: { type: String },
     technologies: [technologySchema],
-    tokens: { type: Number },
-    issues: { type: SchemaTypes.ObjectId, ref: 'issues' },
-    comments: { type: SchemaTypes.ObjectId, ref: 'comments' },
-    githubLink: { type: String },
-    stackOverflowLink: { type: String },
+    tokens: { type: Number, default: 0 },
+    issues: [{ type: SchemaTypes.ObjectId, ref: 'issues' }],
+    comments: [{ type: SchemaTypes.ObjectId, ref: 'comments' }],
+    githubLink: { type: String, unique: true, lowercase: true, trim: true },
+    stackOverflowLink: { type: String, unique: true, lowercase: true, trim: true },
     likes: [likeSchema],
   },
   { timestamps: true },
