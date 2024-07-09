@@ -1,0 +1,118 @@
+{
+  "Users": {
+    "_id": "String",
+    "firstName": "String",
+    "lastName": "String",
+    "email": "String",
+    "password": "String",
+    "role": ["String"],
+    "biography": "String",
+    "disponibility": "String",
+    "createdAt": "Date",
+    "updatedAt": "Date",
+    "technologies": [
+      {
+        "label": "String",
+        "id_techno": "String"
+      }
+    ],
+    "tokens": "Number",
+    "issues": [
+      {
+        "id_issue": "String"
+      }
+    ],
+    "comments": [
+      {
+        "id_comment": "String"
+      }
+    ],
+    "githubLink": "String",
+    "stackoverflowLink": "String",
+    "likes": [
+      {
+        "id_user": "String",
+        "createdAt": "Date",
+        "score": "Number"
+      }
+    ]
+  },
+
+  "Technologies": {
+    "_id": "String",
+    "label": "String",
+    "createdAt": "Date",
+    "updatedAt": "Date"
+  },
+
+  "Issues": {
+    "_id": "String",
+    "id_user": "String",
+    "id_mentor": "String",
+    "createdAt": "Date",
+    "likeScore": "Number",
+    "title": "String",
+    "description": "String",
+    "status": "String",
+    "technologies": [
+      {
+        "label": "String",
+        "id_techno": "String"
+      }
+    ],
+    "visioLink": "String",
+    "bookingDate": "Date",
+    "bookingDuration": "Number",
+    "passedDuration": "Number",
+    "messages": [
+      {
+        "createdAt": "Date",
+        "content": "String",
+        "title": "String"
+      }
+    ]
+  },
+
+  "Comments": {
+    "_id": "String",
+    "id_user": "String",
+    "id_mentor": "String",
+    "createdAt": "Date",
+    "content": "String"
+  }
+}
+
+// Routes API
+
+// Users
+GET /api/users
+GET /api/users/:id
+POST /api/users
+PUT /api/users/:id
+DELETE /api/users/:id
+
+// Technologies
+GET /api/technologies
+GET /api/technologies/:id
+POST /api/technologies
+PUT /api/technologies/:id
+DELETE /api/technologies/:id
+
+// Issues
+GET /api/issues
+GET /api/issues/:id
+POST /api/issues
+PUT /api/issues/:id
+DELETE /api/issues/:id
+
+// Comments
+GET /api/comments
+GET /api/comments/:id
+POST /api/comments
+PUT /api/comments/:id
+DELETE /api/comments/:id
+
+// Auth
+POST /api/auth/login
+POST /api/auth/register
+POST /api/auth/logout
