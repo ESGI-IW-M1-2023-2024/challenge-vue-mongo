@@ -1,5 +1,7 @@
 <template>
   <LandingNavbar></LandingNavbar>
-  <slot></slot>
+  <div class="background-app">
+    <slot></slot>
+  </div>
   <LandingFooter></LandingFooter>
 </template>

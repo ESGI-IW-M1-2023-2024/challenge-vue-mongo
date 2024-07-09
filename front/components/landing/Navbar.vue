@@ -1,8 +1,8 @@
 <script setup>
 const menuitems = [
   {
-    title: "Features",
-    path: "#",
+    title: "Experts",
+    path: "/experts",
   },
   {
     title: "Pricing",
@@ -26,8 +26,8 @@ const open = ref(false);
     <header class="flex flex-col lg:flex-row justify-between items-center my-5">
       <div class="flex w-full lg:w-auto items-center justify-between">
         <a href="/" class="text-lg"
-          ><span class="font-bold text-slate-800">Nuxt</span
-          ><span class="text-slate-500">ship</span>
+          ><span class="text-slate-500">Air</span
+          ><span class="font-bold text-slate-800">Mentor</span>
         </a>
         <div class="block lg:hidden">
           <button @click="open = !open" class="text-gray-800">
