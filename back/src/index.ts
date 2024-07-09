@@ -40,15 +40,7 @@ app.use(
 app.use(
   '/api/messages/*',
   bearerAuth({
-    verifyToken: (token) => {
-      try {
-        jwt.verify(token, myEnv.secretKey);
-        return true;
-      } catch (e: any) {
-        console.log(e);
-        return false;
-      }
-    },
+    verifyToken: (token) => VerifyJWTToken(token),
   }),
 );
 
