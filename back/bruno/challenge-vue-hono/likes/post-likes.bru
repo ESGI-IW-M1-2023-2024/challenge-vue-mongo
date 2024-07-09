@@ -1,0 +1,18 @@
+meta {
+  name: post-likes
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/api/likes
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "idUser":"668bbb2c63d3c7daafc0d5fd",
+    "score": "1"
+  }
+}
