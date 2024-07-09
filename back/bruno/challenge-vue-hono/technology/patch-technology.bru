@@ -1,0 +1,21 @@
+meta {
+  name: patch-technology
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{base_url}}/technologies/{{id}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "label": "Go"
+  }
+}

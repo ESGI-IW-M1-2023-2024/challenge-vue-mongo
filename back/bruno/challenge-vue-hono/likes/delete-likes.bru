@@ -1,0 +1,19 @@
+meta {
+  name: delete-likes
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{base_url}}/likes/{{id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+vars:pre-request {
+  id: 668d02149a5e08df42ba4901
+}

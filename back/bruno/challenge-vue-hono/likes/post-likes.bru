@@ -1,0 +1,22 @@
+meta {
+  name: post-likes
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/likes
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "idUser":"668bbb2c63d3c7daafc0d5fd",
+    "score": "1"
+  }
+}

@@ -1,0 +1,21 @@
+meta {
+  name: post-technology
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/technologies
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "label": "Java"
+  }
+}

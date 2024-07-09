@@ -1,0 +1,23 @@
+meta {
+  name: post-message
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/messages
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "idIssue":"668bbb2c63d3c7daafc0d5fd",
+    "title":"Bonjour, j'aimerai de l'aideuuuu",
+    "content": "Besoin d'aide sur un truc"
+  }
+}

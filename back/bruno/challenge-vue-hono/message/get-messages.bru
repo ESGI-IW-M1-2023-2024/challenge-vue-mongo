@@ -1,0 +1,15 @@
+meta {
+  name: get-messages
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/messages
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

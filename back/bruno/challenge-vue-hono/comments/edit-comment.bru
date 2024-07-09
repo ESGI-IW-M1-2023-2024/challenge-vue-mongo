@@ -1,0 +1,25 @@
+meta {
+  name: edit-comment
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{base_url}}/comments/{{id}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "content": "Test de commentaire modifié !"
+  }
+}
+
+vars:pre-request {
+  id: 668d298374e9207d0bae1c00
+}

@@ -1,7 +1,7 @@
 import { model, Schema, SchemaTypes, Types } from 'mongoose';
 import { compare, genSalt, hash } from 'bcrypt';
 import { ITechnology, technologySchema } from './technology';
-import { ILike, likeSchema } from './likes';
+import { ILike, likeSchema } from './like';
 
 // TODO : add roles
 
@@ -50,8 +50,6 @@ userSchema.pre('save', async function (next): Promise<void> {
 });
 
 userSchema.methods.matchPassword = async function (password: string) {
-  console.log('password');
-  console.log(this.password);
   return await compare(password, this.password);
 };
 

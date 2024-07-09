@@ -1,0 +1,19 @@
+meta {
+  name: delete-technology
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{base_url}}/technologies/{{id}}?id=668d047d25a23eac87e4cc28
+  body: none
+  auth: bearer
+}
+
+params:query {
+  id: 668d047d25a23eac87e4cc28
+}
+
+auth:bearer {
+  token: {{token}}
+}
