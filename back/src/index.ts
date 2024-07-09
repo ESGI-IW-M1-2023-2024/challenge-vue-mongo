@@ -13,14 +13,10 @@ const port = myEnv.port;
 await DbConnect();
 console.log(`🚀 Server is running on http://localhost:${port}`);
 
-app.get('/api', (c) => {
-  return c.text('Hello Hono!');
-});
-
 app.use(
   '/api/users/*',
   bearerAuth({
-    verifyToken: async (token, c) => {
+    verifyToken: (token) => {
       try {
         jwt.verify(token, myEnv.secretKey);
         return true;
