@@ -1,0 +1,15 @@
+meta {
+  name: get-users
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:3000/api/users
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY4YmJjMzg4ZDU1M2ZmZWY2NmRkNGE4In0sImlhdCI6MTcyMDUxNTg2OCwiZXhwIjoxNzIwNTE5NDY4fQ.2knW2fBWp2Myb1bESmz2_e13tTn8tHDu2swX6ZSdalA
+}
