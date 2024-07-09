@@ -1,0 +1,19 @@
+meta {
+  name: delete-user
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{base_url}}/users/{{id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+vars:pre-request {
+  id: 668d39c0e1adfa0218892bf6
+}
