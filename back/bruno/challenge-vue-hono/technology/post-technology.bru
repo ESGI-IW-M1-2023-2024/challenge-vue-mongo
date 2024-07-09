@@ -1,15 +1,21 @@
 meta {
-  name: technologies-list
+  name: post-technology
   type: http
-  seq: 2
+  seq: 3
 }
 
-get {
+post {
   url: {{base_url}}/technologies
-  body: none
+  body: json
   auth: bearer
 }
 
 auth:bearer {
   token: {{token}}
+}
+
+body:json {
+  {
+    "label": "Java"
+  }
 }
