@@ -8,6 +8,7 @@ import VerifyJWTToken from './utils/verify-token';
 import users from './routes/users';
 import technologies from './routes/technologies';
 import auth from './routes/auth';
+import { cors } from 'hono/cors'
 import like from './routes/likes';
 import message from './routes/messages';
 import comments from './routes/comments';
@@ -16,6 +17,9 @@ const app = new Hono();
 const port = myEnv.port;
 await DbConnect();
 console.log(`🚀 Server is running on http://localhost:${port}`);
+
+
+app.use('/api/*', cors());
 
 const securedPaths = ['users/*', 'likes/*', 'technologies/*', 'messages/*', 'comments/*'];
 const routes = [users, technologies, auth, comments, like, message];
