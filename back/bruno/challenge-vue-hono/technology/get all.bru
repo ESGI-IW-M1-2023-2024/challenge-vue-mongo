@@ -1,0 +1,15 @@
+meta {
+  name: get all
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/technologies
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

@@ -1,0 +1,21 @@
+meta {
+  name: edit one
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{base_url}}/technologies/668d03dc25a23eac87e4cc24
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "label": "Go"
+  }
+}
