@@ -16,4 +16,4 @@ const likeSchema = new Schema<ILike>(
 );
 
 const Like = model<ILike>('likes', likeSchema);
-export { Like, ILike };
+export { Like, ILike, likeSchema };

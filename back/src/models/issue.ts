@@ -1,6 +1,6 @@
 import { model, Schema, SchemaTypes, Types } from 'mongoose';
-import { ITechnology, Technology } from './technology';
-import { IMessage, Message } from './message';
+import { ITechnology, technologySchema } from './technology';
+import { IMessage, messageSchema } from './message';
 
 enum Status {
   OPEN = 'open',
@@ -34,12 +34,12 @@ const issueSchema = new Schema<IIssue>(
     title: { type: String },
     description: { type: String },
     status: { type: String },
-    technologies: [Technology],
+    technologies: [technologySchema],
     visioLink: { type: String },
     bookingDate: { type: Date },
     bookingDuration: { type: Number },
     passedDuration: { type: Number },
-    messages: [Message],
+    messages: [messageSchema],
   },
   { timestamps: true },
 );

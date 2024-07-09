@@ -1,7 +1,7 @@
 import { model, Schema, SchemaTypes, Types } from 'mongoose';
 import { compare, genSalt, hash } from 'bcrypt';
-import { ITechnology, Technology } from './technology';
-import { ILike } from './likes';
+import { ITechnology, technologySchema } from './technology';
+import { ILike, likeSchema } from './likes';
 
 // TODO : add roles
 
@@ -32,13 +32,13 @@ const userSchema = new Schema<IUser>(
     password: { type: String, required: true },
     biography: { type: String },
     availability: { type: String },
-    technologies: [Technology],
+    technologies: [technologySchema],
     tokens: { type: Number },
     issues: { type: SchemaTypes.ObjectId, ref: 'issues' },
     comments: { type: SchemaTypes.ObjectId, ref: 'comments' },
     githubLink: { type: String },
     stackOverflowLink: { type: String },
-    likes: [Technology],
+    likes: [likeSchema],
   },
   { timestamps: true },
 );

@@ -14,4 +14,4 @@ const technologySchema = new Schema<ITechnology>(
 );
 
 const Technology = model<ITechnology>('technologies', technologySchema);
-export { Technology, ITechnology };
+export { Technology, ITechnology, technologySchema };
