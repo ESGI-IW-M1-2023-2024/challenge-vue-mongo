@@ -98,6 +98,11 @@ const logout = () => {
           <a href="#" @click="logout()">Se déconnecter</a>
         </div>
       </div>
+      <div v-else>
+        <div class="hidden lg:flex items-center gap-4">
+          <LandingLink href="/profil" styleName="muted" size="md">Profil</LandingLink>
+        </div>
+      </div>
     </header>
   </LandingContainer>
 </template>
