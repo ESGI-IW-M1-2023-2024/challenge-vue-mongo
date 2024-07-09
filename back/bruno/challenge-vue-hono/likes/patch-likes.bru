@@ -1,17 +1,25 @@
 meta {
   name: patch-likes
   type: http
-  seq: 3
+  seq: 4
 }
 
 patch {
-  url: http://localhost:3000/api/likes/668cfd70dd003908ccaf601a
+  url: {{base_url}}/likes/{{id}}
   body: json
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
 }
 
 body:json {
   {
     "score": "-1"
   }
+}
+
+vars:pre-request {
+  id: 668d02149a5e08df42ba4901
 }
