@@ -5,5 +5,5 @@
     "titleBar.activeForeground": "#FAFAFB"
   },
   "cSpell.words": ["hono", "Hono", "visio"],
-  "conventionalCommits.scopes": ["Swagger", "Bruno"]
+  "conventionalCommits.scopes": ["Swagger", "Bruno", "CRUD"]
 }
