@@ -50,8 +50,6 @@ userSchema.pre('save', async function (next): Promise<void> {
 });
 
 userSchema.methods.matchPassword = async function (password: string) {
-  console.log('password');
-  console.log(this.password);
   return await compare(password, this.password);
 };
 
