@@ -1,0 +1,19 @@
+meta {
+  name: get-comment
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/comments/{{id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+vars:pre-request {
+  id: 668d298374e9207d0bae1c00
+}
