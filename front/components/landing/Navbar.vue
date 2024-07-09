@@ -68,16 +68,16 @@ const open = ref(false);
           </li>
         </ul>
         <div class="lg:hidden flex items-center mt-3 gap-4">
-          <LandingLink href="#" styleName="muted" block size="md"
+          <LandingLink href="/login" styleName="muted" block size="md"
             >Log in</LandingLink
           >
-          <LandingLink href="#" size="md" block>Sign up</LandingLink>
+          <LandingLink href="/signup" size="md" block>Sign up</LandingLink>
         </div>
       </nav>
       <div>
         <div class="hidden lg:flex items-center gap-4">
-          <a href="#">Log in</a>
-          <LandingLink href="#" size="md">Sign up</LandingLink>
+          <a href="/login">Log in</a>
+          <LandingLink href="/signup" size="md">Sign up</LandingLink>
         </div>
       </div>
     </header>
