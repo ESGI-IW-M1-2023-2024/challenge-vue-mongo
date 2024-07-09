@@ -1,0 +1,23 @@
+meta {
+  name: create-comment
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/comments
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "idUser": "668bbb2c63d3c7daafc0d5fd",
+    "idMentor": "668bbc388d553ffef66dd4a8",
+    "content": "Ceci est un commentaire"
+  }
+}
