@@ -10,30 +10,28 @@ import technologies from './routes/technologies';
 import auth from './routes/auth';
 import like from './routes/likes';
 import message from './routes/messages';
+import comments from './routes/comments';
 
 const app = new Hono();
 const port = myEnv.port;
 await DbConnect();
 console.log(`🚀 Server is running on http://localhost:${port}`);
 
-const securedPaths = [
-  '/api/users/*',
-  '/api/likes/*',
-  '/api/technologies/*',
-  '/api/messages/*'
-];
+const securedPaths = ['users/*', 'likes/*', 'technologies/*', 'messages/*', 'comments/*'];
+const routes = [users, technologies, auth, comments, like, message];
 
 securedPaths.forEach((path) => {
-  app.use(path, bearerAuth({
-    verifyToken: (token) => VerifyJWTToken(token),
-  }));
+  app.use(
+    `/api/${path}`,
+    bearerAuth({
+      verifyToken: (token) => VerifyJWTToken(token),
+    }),
+  );
 });
 
-app.route('/api', users);
-app.route('/api', technologies);
-app.route('/api', auth);
-app.route('/api', like);
-app.route('/api', message);
+routes.forEach((currentRoute) => {
+  app.route('/api', currentRoute);
+});
 
 app.use('*', async (c) => {
   c.json({ msg: '404 not found' });
