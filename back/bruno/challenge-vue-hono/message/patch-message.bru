@@ -1,0 +1,25 @@
+meta {
+  name: patch-message
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{base_url}}/messages/{{id}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "content": "édition du message"
+  }
+}
+
+vars:pre-request {
+  id: 668d20d542785c16e67d05b2
+}

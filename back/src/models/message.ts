@@ -1,7 +1,8 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 
 interface IMessage {
-  title: string;
+  idIssue: Types.ObjectId;
+  title?: string;
   content: string;
   createdAt: string;
   updatedAt: string;
@@ -9,7 +10,8 @@ interface IMessage {
 
 const messageSchema = new Schema<IMessage>(
   {
-    title: { type: String, required: true },
+    idIssue: { type: Schema.Types.ObjectId, ref: 'issues' },
+    title: { type: String, required: false },
     content: { type: String, required: true },
   },
   { timestamps: true },

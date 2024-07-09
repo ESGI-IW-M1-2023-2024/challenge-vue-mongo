@@ -1,0 +1,19 @@
+meta {
+  name: delete-message
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{base_url}}/messages/{{id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+vars:pre-request {
+  id: 668d1fdf28074899d8953489
+}
