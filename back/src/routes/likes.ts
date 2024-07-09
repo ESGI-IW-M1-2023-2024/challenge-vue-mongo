@@ -1,11 +1,20 @@
 import { Hono } from 'hono';
-import { Like } from '../models/likes';
+import { Like } from '../models/like';
 
 const api = new Hono().basePath('/likes');
 
 api.get('/', async (c) => {
   const users = await Like.find();
   return c.json(users, 200);
+});
+
+api.get('/:id', async (c) => {
+  const { id } = c.req.param();
+  const like = await Like.findById(id);
+  if (!like) {
+    return c.json({ message: 'Like not found' }, 404);
+  }
+  return c.json(like, 200);
 });
 
 api.post('/', async (c) => {

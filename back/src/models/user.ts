@@ -1,7 +1,7 @@
 import { model, Schema, SchemaTypes, Types } from 'mongoose';
 import { compare, genSalt, hash } from 'bcrypt';
 import { ITechnology, technologySchema } from './technology';
-import { ILike, likeSchema } from './likes';
+import { ILike, likeSchema } from './like';
 
 // TODO : add roles
 
