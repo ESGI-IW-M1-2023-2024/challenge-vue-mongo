@@ -30,7 +30,7 @@ api.post('/login', async (c) => {
     const payload = { user: { id: user.id } };
     const token = jwt.sign(payload, myEnv.secretKey, { expiresIn: '1h' });
 
-    return c.json({ token });
+    return c.json({ token, id: user._id });
   } catch (err: any) {
     return c.json({ message: 'Error logging in', error: err.message }, 400);
   }
