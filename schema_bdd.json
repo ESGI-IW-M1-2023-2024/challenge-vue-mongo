@@ -112,6 +112,20 @@ POST /api/comments
 PUT /api/comments/:id
 DELETE /api/comments/:id
 
+// Likes
+GET /api/likes
+GET /api/likes/:id
+POST /api/likes
+PUT /api/likes/:id
+DELETE /api/likes/:id
+
+// Messages
+GET /api/messages
+GET /api/messages/:id
+POST /api/messages
+PUT /api/messages/:id
+DELETE /api/messages/:id
+
 // Auth
 POST /api/auth/login
 POST /api/auth/register
