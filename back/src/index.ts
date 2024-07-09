@@ -16,33 +16,18 @@ const port = myEnv.port;
 await DbConnect();
 console.log(`🚀 Server is running on http://localhost:${port}`);
 
-app.use(
+const securedPaths = [
   '/api/users/*',
-  bearerAuth({
-    verifyToken: (token) => VerifyJWTToken(token),
-  }),
-);
-
-app.use(
   '/api/likes/*',
-  bearerAuth({
-    verifyToken: (token) => VerifyJWTToken(token),
-  }),
-);
-
-app.use(
   '/api/technologies/*',
-  bearerAuth({
-    verifyToken: (token) => VerifyJWTToken(token),
-  }),
-);
+  '/api/messages/*'
+];
 
-app.use(
-  '/api/messages/*',
-  bearerAuth({
+securedPaths.forEach((path) => {
+  app.use(path, bearerAuth({
     verifyToken: (token) => VerifyJWTToken(token),
-  }),
-);
+  }));
+});
 
 app.route('/api', users);
 app.route('/api', technologies);
