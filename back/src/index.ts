@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 import { myEnv } from '../conf';
 import { DbConnect } from './db';
 import { bearerAuth } from 'hono/bearer-auth';
-import jwt from 'jsonwebtoken';
+import VerifyJWTToken from './utils/verify-token';
 
 import users from './routes/users';
 import technologies from './routes/technologies';
@@ -18,45 +18,21 @@ console.log(`🚀 Server is running on http://localhost:${port}`);
 app.use(
   '/api/users/*',
   bearerAuth({
-    verifyToken: (token) => {
-      try {
-        jwt.verify(token, myEnv.secretKey);
-        return true;
-      } catch (e: any) {
-        console.log(e);
-        return false;
-      }
-    },
+    verifyToken: (token) => VerifyJWTToken(token),
   }),
 );
 
 app.use(
   '/api/likes/*',
   bearerAuth({
-    verifyToken: (token) => {
-      try {
-        jwt.verify(token, myEnv.secretKey);
-        return true;
-      } catch (e: any) {
-        console.log(e);
-        return false;
-      }
-    },
+    verifyToken: (token) => VerifyJWTToken(token),
   }),
 );
 
 app.use(
   '/api/technologies/*',
   bearerAuth({
-    verifyToken: (token) => {
-      try {
-        jwt.verify(token, myEnv.secretKey);
-        return true;
-      } catch (e: any) {
-        console.log(e);
-        return false;
-      }
-    },
+    verifyToken: (token) => VerifyJWTToken(token),
   }),
 );
 
