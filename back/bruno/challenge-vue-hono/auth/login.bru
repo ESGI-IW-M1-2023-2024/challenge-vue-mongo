@@ -5,14 +5,14 @@ meta {
 }
 
 post {
-  url: http://localhost:3000/api/login
+  url: {{base_url}}/login
   body: json
   auth: none
 }
 
 body:json {
   {
-    "email": "operdrix@myges.fr",
-    "password": "adminadmin"
+    "email": "{{email}}",
+    "password": "{{password}}"
   }
 }

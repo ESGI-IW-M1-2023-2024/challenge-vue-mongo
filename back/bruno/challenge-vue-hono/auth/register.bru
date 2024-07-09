@@ -5,16 +5,16 @@ meta {
 }
 
 post {
-  url: http://localhost:3000/api/register
+  url: {{base_url}}/register
   body: json
   auth: none
 }
 
 body:json {
   {
-      "firstName": "Olivier",
-      "lastName": "Perdrix",
-      "email": "operdrix@myges.fr",
-      "password": "adminadmin"
+      "firstName": "{{firstName}}",
+      "lastName": "{{lastName}}",
+      "email": "{{email}}",
+      "password": "{{password}}"
   }
 }
