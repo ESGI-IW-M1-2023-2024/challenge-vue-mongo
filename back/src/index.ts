@@ -6,6 +6,7 @@ import { bearerAuth } from 'hono/bearer-auth';
 import jwt from 'jsonwebtoken';
 
 import users from './routes/users';
+import technologies from './routes/technologies';
 import auth from './routes/auth';
 import like from './routes/likes';
 
@@ -44,7 +45,23 @@ app.use(
   }),
 );
 
+app.use(
+  '/api/technologies/*',
+  bearerAuth({
+    verifyToken: (token) => {
+      try {
+        jwt.verify(token, myEnv.secretKey);
+        return true;
+      } catch (e: any) {
+        console.log(e);
+        return false;
+      }
+    },
+  }),
+);
+
 app.route('/api', users);
+app.route('/api', technologies);
 app.route('/api', auth);
 
 app.route('/api', like);
