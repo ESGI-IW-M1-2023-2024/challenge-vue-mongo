@@ -1,52 +1,41 @@
-<script setup>
+<script setup lang="ts">
 import Card from '~/components/landing/Card.vue';
 
 definePageMeta({
   layout: "landing",
 });
 
-const TeamImg1 = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-const TeamImg2 = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-const TeamImg3 = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+const users = ref([]);
+const errorMessage = ref('');
+const loading = ref(true);
 
-const team = [
-  {
-    name: "Janette Lynch",
-    title: "Senior Director",
-    avatar: {
-      src: TeamImg1,
-      width: 480,
-      height: 560,
-    },
-  },
-  {
-    name: "Marcell Ziemann",
-    title: "Principal Strategist",
-    avatar: {
-      src: TeamImg2,
-      width: 580,
-      height: 580,
-    },
-  },
-  {
-    name: "Robert Palmer",
-    title: "Marketing Engineer",
-    avatar: {
-      src: TeamImg3,
-      width: 580,
-      height: 580,
-    },
-  },
-  {
-    name: "Sabu Chtonqu",
-    title: "Cooker",
-    avatar: {
-      src: TeamImg3,
-      width: 580,
-      height: 580,
-    },
-  },
-];
+onMounted(async () => {
+
+  try {
+    const response = await fetch('http://localhost:3000/api/users', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      users.value = data;
+      loading.value = false;
+      console.log(users.value);
+    } else {
+      const data = await response.json();
+      errorMessage.value = data.message;
+      return navigateTo('/login');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 </script>
 
 <template>
@@ -58,30 +47,35 @@ const team = [
 
 
     <v-text-field
-      :loading="loading"
       append-inner-icon="mdi-magnify"
       density="compact"
       label="Rechercher par techno"
       variant="solo"
       hide-details
       single-line
-      @click:append-inner="onClick"
       class="mx-auto mt-5"
     ></v-text-field>
 
-    <v-container>
+    <v-container v-if="!loading">
       <v-row>
-        <v-col cols="4" v-for="item of team">
+        <v-col cols="4" v-for="item of users">
           <Card 
             class="group"
-            :image="item.avatar.src"
-            :title="item.name"
+            image="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            :title="item.firstName"
             :subtitle="item.title"
-            :to="'/experts/' + item.name"
+            :to="'/experts/' + item._id"
+            :reviews="item.likes"
           >
-            <v-chip>
-              test
-            </v-chip>
+          <v-container>
+            <v-row no-gutters class="gap-1">
+              <v-col v-for="techno of item.technologies" style="max-width: fit-content;">
+                <v-chip>
+                  {{ techno.label }}
+                </v-chip>
+              </v-col>
+            </v-row>
+          </v-container>
           </Card>
         </v-col>
       </v-row>
