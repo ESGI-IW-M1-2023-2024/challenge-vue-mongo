@@ -11,6 +11,11 @@ api.get('/', roleMiddleware(Role.ADMIN), async (c) => {
   return c.json(users, 200);
 });
 
+api.get('/mentors', roleMiddleware(Role.USER), async (c) => {
+  const mentors = await User.find({ role: Role.MENTOR });
+  return c.json(mentors, 200);
+});
+
 api.get('/:id', roleMiddleware(Role.ADMIN), async (c) => {
   const _id = c.req.param('id');
 
