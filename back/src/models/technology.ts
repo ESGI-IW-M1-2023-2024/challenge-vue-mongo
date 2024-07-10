@@ -9,7 +9,7 @@ interface ITechnology {
 
 const technologySchema = new Schema<ITechnology>(
   {
-    label: { type: String, required: true, unique: true, lowercase: true },
+    label: { type: String, required: true, lowercase: true },
   },
   { timestamps: true },
 );

@@ -12,28 +12,28 @@ enum Status {
 interface IIssue {
   idUser: Types.ObjectId;
   idMentor: Types.ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
-  likeScore: number;
-  title: string;
-  description: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  likeScore?: number;
+  title?: string;
+  description?: string;
   status: Status;
-  technologies: ITechnology[];
-  visioLink: string;
-  bookingDate: Date;
-  bookingDuration: number;
-  passedDuration: number;
+  technologies?: ITechnology[];
+  visioLink?: string;
+  bookingDate?: Date;
+  bookingDuration?: number;
+  passedDuration?: number;
   messages: IMessage[];
 }
 
 const issueSchema = new Schema<IIssue>(
   {
-    idUser: { type: SchemaTypes.ObjectId, ref: 'users' },
-    idMentor: { type: SchemaTypes.ObjectId, ref: 'users' },
+    idUser: { type: SchemaTypes.ObjectId, ref: 'users', required: true },
+    idMentor: { type: SchemaTypes.ObjectId, ref: 'users', required: true },
     likeScore: { type: Number },
     title: { type: String },
     description: { type: String },
-    status: { type: String },
+    status: { type: String, default: Status.OPEN },
     technologies: [technologySchema],
     visioLink: { type: String },
     bookingDate: { type: Date },
