@@ -8,8 +8,12 @@ definePageMeta({
 const email = ref('');
 const password = ref('');
 const errorMessage = ref('');
+const userStore = useUserStore();
+const { tokenRef } = storeToRefs(userStore);
+const router = useRouter();
 
 const handleSubmit = async () => {
+
   try {
     const response = await fetch('http://localhost:3000/api/login', {
       method: 'POST',
@@ -26,7 +30,10 @@ const handleSubmit = async () => {
       const data = await response.json();
       const token = data.token;
       localStorage.setItem('token', token);
-      window.location.href = '/';
+      userStore.setToken(token);
+      userStore.setUser(data.id);
+      console.log('token', userStore.tokenRef);
+      // router.back();
     } else {
       const data = await response.json();
       errorMessage.value = data.message;

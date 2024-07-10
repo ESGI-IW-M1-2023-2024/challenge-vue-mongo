@@ -5,48 +5,36 @@ definePageMeta({
   layout: "landing",
 });
 
-const TeamImg1 = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-const TeamImg2 = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-const TeamImg3 = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+const user = ref({});
+const route = useRoute()
+const id = route.params.id
 
-const team = [
-  {
-    name: "Janette Lynch",
-    title: "Senior Director",
-    avatar: {
-      src: TeamImg1,
-      width: 480,
-      height: 560,
+onMounted(async () => {
+
+try {
+  const response = await fetch('http://localhost:3000/api/users/'+  id, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json',
     },
-  },
-  {
-    name: "Marcell Ziemann",
-    title: "Principal Strategist",
-    avatar: {
-      src: TeamImg2,
-      width: 580,
-      height: 580,
-    },
-  },
-  {
-    name: "Robert Palmer",
-    title: "Marketing Engineer",
-    avatar: {
-      src: TeamImg3,
-      width: 580,
-      height: 580,
-    },
-  },
-  {
-    name: "Sabu Chtonqu",
-    title: "Cooker",
-    avatar: {
-      src: TeamImg3,
-      width: 580,
-      height: 580,
-    },
-  },
-];
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    users.value = data;
+    loading.value = false;
+  } else {
+    const data = await response.json();
+    errorMessage.value = data.message;
+    return navigateTo('/login');
+  }
+} catch (error) {
+  console.error(error);
+}
+});
+
+
 </script>
 
 <template>

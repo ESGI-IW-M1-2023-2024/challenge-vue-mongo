@@ -20,7 +20,8 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
-    "nuxt-icon"
+    "nuxt-icon",
+    '@pinia/nuxt',
   ],
   vite: {
     vue: {
