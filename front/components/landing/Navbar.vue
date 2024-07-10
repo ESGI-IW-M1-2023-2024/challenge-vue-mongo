@@ -89,6 +89,7 @@ const logout = () => {
         </div>
         <div class="lg:hidden flex items-center mt-3 gap-4" v-else>
             <LandingLink href="/profil" styleName="muted" size="md">Profil</LandingLink>
+            <LandingLink href="/" @click="logout" size="md">Logout</LandingLink>
         </div>
       </nav>
       <div>
@@ -104,6 +105,7 @@ const logout = () => {
       <div v-else>
         <div class="hidden lg:flex items-center gap-4">
           <LandingLink href="/profil" styleName="muted" size="md">Profil</LandingLink>
+          <LandingLink href="/" @click="logout" size="md">Logout</LandingLink>
         </div>
       </div>
     </header>
