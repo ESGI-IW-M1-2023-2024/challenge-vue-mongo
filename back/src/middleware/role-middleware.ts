@@ -24,9 +24,20 @@ const roleMiddleware = (requiredRole: Role): MiddlewareHandler => {
 
       c.set('user', user);
       await next();
-    } catch (error) {
-      // TODO return custom error due to typeof error
-      return c.json({ error: 'Unauthorized' }, 401);
+    } catch (error: any) {
+      if (error instanceof jwt.TokenExpiredError) {
+        return c.json({ error: 'Token expired' }, 401);
+      }
+
+      if (error instanceof jwt.JsonWebTokenError) {
+        return c.json({ error: 'Token invalid' }, 401);
+      }
+
+      if (error instanceof jwt.NotBeforeError) {
+        return c.json({ error: 'Token not active' }, 401);
+      }
+
+      return c.json({ error: 'Unknown error on jwt token' }, 401);
     }
   };
 };
