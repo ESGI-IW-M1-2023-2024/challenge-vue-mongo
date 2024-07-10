@@ -1,11 +1,11 @@
 meta {
-  name: delete-likes
+  name: get-likes
   type: http
-  seq: 5
+  seq: 1
 }
 
-delete {
-  url: {{base_url}}/likes/{{id}}
+get {
+  url: {{base_url}}/users/{{userId}}/likes
   body: none
   auth: bearer
 }
@@ -15,5 +15,5 @@ auth:bearer {
 }
 
 vars:pre-request {
-  id: 668d02149a5e08df42ba4901
+  userId: 668bbb2c63d3c7daafc0d5fd
 }
