@@ -20,17 +20,7 @@ console.log(`🚀 Server is running on http://localhost:${port}`);
 
 app.use('/api/*', cors());
 
-const securedPaths = ['likes/*', 'technologies/*', 'messages/*', 'comments/*'];
 const routes = [users, technologies, auth, comments, like, message];
-
-securedPaths.forEach((path) => {
-  app.use(
-    `/api/${path}`,
-    bearerAuth({
-      verifyToken: (token) => VerifyJWTToken(token),
-    }),
-  );
-});
 
 routes.forEach((currentRoute) => {
   app.route('/api', currentRoute);

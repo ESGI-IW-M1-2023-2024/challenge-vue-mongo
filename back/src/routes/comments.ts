@@ -1,15 +1,17 @@
 import { Hono } from 'hono';
 import { Comment } from '../models/comment';
 import { isValidObjectId } from 'mongoose';
+import roleMiddleware from '../middleware/role-middleware';
+import { Role } from '../models/user';
 
 const api = new Hono().basePath('/comments');
 
-api.get('/', async (c) => {
+api.get('/', roleMiddleware(Role.USER), async (c) => {
   const comments = await Comment.find();
   return c.json(comments, 200);
 });
 
-api.get('/:id', async (c) => {
+api.get('/:id', roleMiddleware(Role.USER), async (c) => {
   const _id = c.req.param('id');
 
   if (isValidObjectId(_id)) {
@@ -25,7 +27,7 @@ api.get('/:id', async (c) => {
   return c.json({ msg: 'ObjectId mal formaté' }, 400);
 });
 
-api.post('/', async (c) => {
+api.post('/', roleMiddleware(Role.USER), async (c) => {
   const body = await c.req.json();
 
   try {
@@ -37,7 +39,7 @@ api.post('/', async (c) => {
   }
 });
 
-api.patch('/:id', async (c) => {
+api.patch('/:id', roleMiddleware(Role.USER), async (c) => {
   const _id = c.req.param('id');
   const body = await c.req.json();
   const q = {
@@ -63,7 +65,7 @@ api.patch('/:id', async (c) => {
   return c.json(tryToUpdate, 200);
 });
 
-api.delete('/:id', async (c) => {
+api.delete('/:id', roleMiddleware(Role.USER), async (c) => {
   const _id = c.req.param('id');
 
   if (!isValidObjectId(_id)) {

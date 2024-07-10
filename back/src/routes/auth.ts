@@ -5,17 +5,17 @@ import jwt from 'jsonwebtoken';
 
 const api = new Hono().basePath('');
 
-api.post('/register', async (c) => {
-  const userInfos = await c.req.json();
+// api.post('/register', async (c) => {
+//   const userInfos = await c.req.json();
 
-  try {
-    const user = new User(userInfos);
-    await user.save();
-    return c.json({ message: 'User registered successfully' });
-  } catch (err: any) {
-    return c.json({ message: 'Error registering user', error: err.message }, 400);
-  }
-});
+//   try {
+//     const user = new User(userInfos);
+//     await user.save();
+//     return c.json({ message: 'User registered successfully' });
+//   } catch (err: any) {
+//     return c.json({ message: 'Error registering user', error: err.message }, 400);
+//   }
+// });
 
 api.post('/login', async (c) => {
   const { email, password } = await c.req.json();
