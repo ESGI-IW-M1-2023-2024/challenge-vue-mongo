@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose';
+import { User } from './user';
 
 interface ITechnology {
   label: string;
@@ -12,6 +13,12 @@ const technologySchema = new Schema<ITechnology>(
   },
   { timestamps: true },
 );
+
+technologySchema.post('findOneAndUpdate', async function (doc) {
+  if (doc) {
+    await User.updateMany({ 'technologies._id': doc._id }, { $set: { 'technologies.$.label': doc.label } });
+  }
+});
 
 const Technology = model<ITechnology>('technologies', technologySchema);
 export { Technology, ITechnology, technologySchema };
