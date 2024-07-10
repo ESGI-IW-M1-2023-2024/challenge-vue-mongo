@@ -1,0 +1,25 @@
+meta {
+  name: create-comment-on-user
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/users/{{id}}/comments
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "content": "Très bon mentor !"
+  }
+}
+
+vars:pre-request {
+  id: 668bbb2c63d3c7daafc0d5fd
+}

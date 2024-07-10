@@ -37,6 +37,7 @@ const roleMiddleware = (requiredRole: Role): MiddlewareHandler => {
         return c.json({ error: 'Token not active' }, 401);
       }
 
+      console.log(error);
       return c.json({ error: 'Unknown error on jwt token' }, 401);
     }
   };

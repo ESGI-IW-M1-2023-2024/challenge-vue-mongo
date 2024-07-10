@@ -50,17 +50,23 @@ api.patch('/:id', roleMiddleware(Role.USER), async (c) => {
     $set: { ...body },
   };
 
-  if (!isValidObjectId(q._id)) {
+  if (!isValidObjectId(_id)) {
     return c.json({ msg: 'ObjectId mal formaté' }, 400);
+  }
+
+  const comment = await Comment.findOne({ _id });
+
+  if (!comment) {
+    return c.json({ msg: 'Commentaire non trouvé' }, 404);
+  }
+
+  if (comment.idUser.toString() !== c.get('user')._id.toString()) {
+    return c.json({ msg: "Vous n'êtes pas autorisé à modifier ce commentaire" }, 403);
   }
 
   const tryToUpdate = await Comment.findOneAndUpdate(q, updateQuery, {
     new: true,
   });
-
-  if (!tryToUpdate) {
-    return c.json({ msg: 'Commentaire non trouvé' }, 404);
-  }
 
   return c.json(tryToUpdate, 200);
 });

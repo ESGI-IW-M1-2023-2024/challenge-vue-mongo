@@ -3,6 +3,7 @@ import { IUser, Role, User } from '../models/user';
 import { isValidObjectId } from 'mongoose';
 import roleMiddleware from '../middleware/role-middleware';
 import { Technology } from '../models/technology';
+import { Comment } from '../models/comment';
 
 const api = new Hono().basePath('/users');
 
@@ -121,6 +122,36 @@ api.post('/:id/technologies', roleMiddleware(Role.USER), async (c) => {
   user.technologies?.push(technology);
   await user.save();
   return c.json(user, 200);
+});
+
+api.post('/:id/comments', roleMiddleware(Role.USER), async (c) => {
+  const idMentor = c.req.param('id');
+  const loggedUser: IUser = c.get('user');
+  const { content } = await c.req.json();
+
+  if (!isValidObjectId(idMentor)) {
+    return c.json({ msg: 'ObjectId mal formaté' }, 400);
+  }
+
+  const mentor = await User.findById({ _id: idMentor });
+
+  if (!mentor) {
+    return c.json({ msg: 'Mentor non trouvé' }, 404);
+  }
+
+  if (idMentor === loggedUser._id.toString()) {
+    return c.json({ msg: 'Vous ne pouvez pas commenter votre propre profil' }, 400);
+  }
+
+  const newComment = new Comment({
+    idUser: loggedUser._id,
+    idMentor,
+    content,
+  });
+
+  mentor.comments?.push(newComment._id);
+  await mentor.save();
+  return c.json(mentor.comments);
 });
 
 export default api;
