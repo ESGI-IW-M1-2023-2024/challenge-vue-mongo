@@ -74,7 +74,7 @@ onMounted(async () => {
 
     <v-container>
       <v-row>
-        <v-col cols="4" v-for="item of team">
+        <v-col cols="4" v-for="item of users">
           <Card 
             class="group"
             :image="item.avatar.src"
