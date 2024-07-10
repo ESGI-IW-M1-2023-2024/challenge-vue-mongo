@@ -77,9 +77,13 @@ const logout = () => {
             </a>
           </li>
         </ul>
-        <div class="lg:hidden flex items-center mt-3 gap-4">
-          <LandingLink href="/login" styleName="muted" block size="md">Log in</LandingLink>
-          <LandingLink href="/signup" size="md" block>Sign up</LandingLink>
+        <div v-if="!isLogged" class="lg:hidden flex items-center mt-3 gap-4">
+          <LandingLink href="/login" styleName="muted" block size="md">Se connecter</LandingLink>
+          <LandingLink href="/signup" size="md" block>S'inscrire</LandingLink>
+        </div>
+        <div v-else class="lg:hidden flex items-center mt-3 gap-4">
+          <p>Bienvenue !</p>
+          <a href="#" @click="logout()">Se déconnecter</a>
         </div>
       </nav>
       <div>
