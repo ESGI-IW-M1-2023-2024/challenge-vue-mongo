@@ -1,15 +1,17 @@
 import { Hono } from 'hono';
 import { Message } from '../models/message';
 import { jsxAttr } from 'hono/jsx/jsx-runtime';
+import roleMiddleware from '../middleware/role-middleware';
+import { Role } from '../models/user';
 
 const api = new Hono().basePath('/messages');
 
-api.get('/', async (c) => {
+api.get('/', roleMiddleware(Role.USER), async (c) => {
   const messages = await Message.find();
   return c.json(messages, 200);
 });
 
-api.get('/:id', async (c) => {
+api.get('/:id', roleMiddleware(Role.USER), async (c) => {
   const { id } = c.req.param();
   try {
     const message = await Message.findById(id);
@@ -19,7 +21,7 @@ api.get('/:id', async (c) => {
   }
 });
 
-api.post('/', async (c) => {
+api.post('/', roleMiddleware(Role.USER), async (c) => {
   const { idIssue, title, content } = await c.req.json();
   try {
     const message = new Message({ idIssue, title, content });
@@ -30,19 +32,18 @@ api.post('/', async (c) => {
   }
 });
 
-api.patch('/:id', async (c) => {
+api.patch('/:id', roleMiddleware(Role.USER), async (c) => {
   const { id } = c.req.param();
   const { title, content } = await c.req.json();
   try {
     const message = await Message.findByIdAndUpdate(id, { title, content }, { new: true });
     return c.json(message, 200);
-  }
-  catch (err: any) {
+  } catch (err: any) {
     return c.json({ message: 'Error updating message', error: err.message }, 400);
   }
 });
 
-api.delete('/:id', async (c) => {
+api.delete('/:id', roleMiddleware(Role.USER), async (c) => {
   const { id } = c.req.param();
   try {
     await Message.findByIdAndDelete(id);

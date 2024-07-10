@@ -1,14 +1,16 @@
 import { Hono } from 'hono';
 import { Like } from '../models/like';
+import roleMiddleware from '../middleware/role-middleware';
+import { Role } from '../models/user';
 
 const api = new Hono().basePath('/likes');
 
-api.get('/', async (c) => {
+api.get('/', roleMiddleware(Role.USER), async (c) => {
   const users = await Like.find();
   return c.json(users, 200);
 });
 
-api.get('/:id', async (c) => {
+api.get('/:id', roleMiddleware(Role.ADMIN), async (c) => {
   const { id } = c.req.param();
   const like = await Like.findById(id);
   if (!like) {
@@ -17,7 +19,7 @@ api.get('/:id', async (c) => {
   return c.json(like, 200);
 });
 
-api.post('/', async (c) => {
+api.post('/', roleMiddleware(Role.USER), async (c) => {
   const { idUser, score } = await c.req.json();
   try {
     const like = new Like({ idUser, score });
@@ -28,21 +30,24 @@ api.post('/', async (c) => {
   }
 });
 
-api.patch('/:id', async (c) => {
+api.patch('/:id', roleMiddleware(Role.USER), async (c) => {
   const { id } = c.req.param();
   const { score } = await c.req.json();
   try {
-    const like = await Like.findByIdAndUpdate(id, {
-      score
-    }, { new: true });
+    const like = await Like.findByIdAndUpdate(
+      id,
+      {
+        score,
+      },
+      { new: true },
+    );
     return c.json(like, 200);
-  }
-  catch (err: any) {
+  } catch (err: any) {
     return c.json({ message: 'Error updating like', error: err.message }, 400);
   }
 });
 
-api.delete('/:id', async (c) => {
+api.delete('/:id', roleMiddleware(Role.USER), async (c) => {
   const { id } = c.req.param();
   try {
     await Like.findByIdAndDelete(id);
