@@ -181,6 +181,26 @@ api.patch('/:idMentor/comments/:idComment', roleMiddleware(Role.USER), async (c)
   return c.json(comment, 200);
 });
 
-// TODO delete (owner + admin) comment
+api.delete('/:idMentor/comments/:idComment', roleMiddleware(Role.USER), async (c) => {
+  const idComment = c.req.param('idComment');
+  const loggedUser: IUser = c.get('user');
+
+  if (!isValidObjectId(idComment)) {
+    return c.json({ msg: 'ObjectId mal formaté' }, 400);
+  }
+
+  const comment = await Comment.findById(idComment);
+
+  if (!comment) {
+    return c.json({ error: 'Commentaire non trouvé' }, 400);
+  }
+
+  if (comment.idUser.toString() !== loggedUser._id.toString() || loggedUser.role !== Role.ADMIN) {
+    return c.json({ error: "Vous ne pouvez pas supprimer le commentaire d'un autre utilisateur" }, 403);
+  }
+
+  await Comment.deleteOne({ _id: idComment });
+  return c.json({ msg: `Commentaire avec l'id ${comment._id} supprimé avec succès` }, 201);
+});
 
 export default api;

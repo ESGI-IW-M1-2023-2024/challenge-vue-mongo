@@ -5,15 +5,15 @@ meta {
 }
 
 delete {
-  url: {{base_url}}/comments/{{id}}?id=668d2a3a74e9207d0bae1c02
+  url: {{base_url}}/comments/{{id}}
   body: none
   auth: bearer
 }
 
-query {
-  id: 668d2a3a74e9207d0bae1c02
-}
-
 auth:bearer {
   token: {{token}}
+}
+
+vars:pre-request {
+  id: 668ef3dd7c6abee91327bf19
 }
