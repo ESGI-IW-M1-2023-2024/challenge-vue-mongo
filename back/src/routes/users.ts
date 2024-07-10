@@ -124,7 +124,12 @@ api.post('/:id/technologies', roleMiddleware(Role.USER), async (c) => {
   return c.json(user, 200);
 });
 
-// TODO user comments list
+api.get('/:id/comments', roleMiddleware(Role.USER), async (c) => {
+  const idUser = c.req.param('id');
+
+  const comments = await Comment.find({ idUser });
+  return c.json(comments, 201);
+});
 
 api.post('/:id/comments', roleMiddleware(Role.USER), async (c) => {
   const idMentor = c.req.param('id');

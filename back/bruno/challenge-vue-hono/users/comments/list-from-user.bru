@@ -1,0 +1,19 @@
+meta {
+  name: list-from-user
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base_url}}/users/{{id}}/comments
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+vars:pre-request {
+  id: 668bbc388d553ffef66dd4a8
+}
