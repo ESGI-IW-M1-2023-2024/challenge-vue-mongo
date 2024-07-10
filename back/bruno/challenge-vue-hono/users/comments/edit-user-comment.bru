@@ -1,0 +1,26 @@
+meta {
+  name: edit-user-comment
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{base_url}}/users/{{mentorId}}/comments/{{commentId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "content": "Excellent mentor !!!"
+  }
+}
+
+vars:pre-request {
+  mentorId: 668bbb2c63d3c7daafc0d5fd
+  commentId: 668eb648f3c03a2ac6093d1a
+}

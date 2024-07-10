@@ -124,6 +124,8 @@ api.post('/:id/technologies', roleMiddleware(Role.USER), async (c) => {
   return c.json(user, 200);
 });
 
+// TODO user comments list
+
 api.post('/:id/comments', roleMiddleware(Role.USER), async (c) => {
   const idMentor = c.req.param('id');
   const loggedUser: IUser = c.get('user');
@@ -150,8 +152,35 @@ api.post('/:id/comments', roleMiddleware(Role.USER), async (c) => {
   });
 
   mentor.comments?.push(newComment._id);
+  await newComment.save();
   await mentor.save();
   return c.json(mentor.comments);
 });
+
+api.patch('/:idMentor/comments/:idComment', roleMiddleware(Role.USER), async (c) => {
+  const idComment = c.req.param('idComment');
+  const loggedUser: IUser = c.get('user');
+  const { content } = await c.req.json();
+
+  if (!isValidObjectId(idComment)) {
+    return c.json({ msg: 'ObjectId mal formaté' }, 400);
+  }
+
+  const comment = await Comment.findOne({ _id: idComment });
+
+  if (!comment) {
+    return c.json({ error: 'Commentaire non trouvé' }, 400);
+  }
+
+  if (comment.idUser.toString() !== loggedUser._id.toString()) {
+    return c.json({ error: "Vous ne pouvez pas modifier le commentaire d'un autre utilisateur" }, 403);
+  }
+
+  comment.content = content;
+  await comment.save();
+  return c.json(comment, 200);
+});
+
+// TODO delete (owner + admin) comment
 
 export default api;
