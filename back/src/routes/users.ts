@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
-import { Role, User } from '../models/user';
+import { IUser, Role, User } from '../models/user';
 import { isValidObjectId } from 'mongoose';
 import roleMiddleware from '../middleware/role-middleware';
+import { Technology } from '../models/technology';
 
 const api = new Hono().basePath('/users');
 
@@ -79,6 +80,42 @@ api.delete('/:id', roleMiddleware(Role.ADMIN), async (c) => {
   }
 
   return c.json({ msg: 'Utilisateur non trouvé' }, 404);
+});
+
+api.post('/:id/technologies', roleMiddleware(Role.USER), async (c) => {
+  const _id = c.req.param('id');
+  const { idTechnology } = await c.req.json();
+
+  if (!isValidObjectId(_id)) {
+    return c.json({ msg: 'ObjectId mal formaté' }, 400);
+  }
+
+  const user = await User.findById(_id);
+  const loggedUser = c.get('user');
+  if (!user) {
+    return c.json({ error: 'Utilisateur non trouvé' }, 404);
+  }
+
+  if (user.role !== Role.ADMIN && user._id.toString() !== loggedUser._id.toString()) {
+    return c.json({ error: "Vous n'avez pas les droits d'ajouter une technologie à cet utilisateur" }, 403);
+  }
+
+  const technology = await Technology.findOne({ _id: idTechnology });
+  if (!technology) {
+    return c.json({ error: 'Technologie non trouvée' }, 404);
+  }
+
+  if (
+    user.technologies?.some(
+      (userTechnology) => technology.label.toString().toLowerCase() === userTechnology.label.toString().toLowerCase(),
+    )
+  ) {
+    return c.json({ error: "L'utilisateur possède déjà cette technologie" }, 400);
+  }
+
+  user.technologies?.push(technology);
+  await user.save();
+  return c.json(user, 200);
 });
 
 export default api;
