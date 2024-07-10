@@ -87,6 +87,9 @@ const logout = () => {
           <p>Bienvenue {{ userStore.userRef?.firstName }} !</p>
           <a href="#" @click="logout()">Se déconnecter</a>
         </div>
+        <div class="lg:hidden flex items-center mt-3 gap-4" v-else>
+            <LandingLink href="/profil" styleName="muted" size="md">Profil</LandingLink>
+        </div>
       </nav>
       <div>
         <div v-if="!isLogged" class="hidden lg:flex items-center gap-4">
