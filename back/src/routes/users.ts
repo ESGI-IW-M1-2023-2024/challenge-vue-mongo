@@ -89,12 +89,27 @@ api.post('/', roleMiddleware(Role.ADMIN), async (c) => {
   }
 });
 
-api.patch('/:id', roleMiddleware(Role.ADMIN), async (c) => {
+api.patch('/:id', roleMiddleware(Role.USER), async (c) => {
   const _id = c.req.param('id');
   const body = await c.req.json();
   const q = {
     _id,
   };
+
+  if (!isValidObjectId(q._id)) {
+    return c.json({ msg: 'ObjectId mal formaté' }, 400);
+  }
+
+  const user = await User.findOne({ _id });
+  const loggedUser = c.get('user');
+
+  if (!user) {
+    return c.json({ msg: 'Utilisateur non trouvé' }, 404);
+  }
+
+  if (user.role !== Role.ADMIN && user._id.toString() !== loggedUser._id.toString()) {
+    return c.json({ error: "Vous n'avez pas les droits de modifier cet utilisateur" }, 403);
+  }
 
   if (body.password) {
     const salt = await genSalt(10);
@@ -105,19 +120,11 @@ api.patch('/:id', roleMiddleware(Role.ADMIN), async (c) => {
     $set: { ...body },
   };
 
-  if (!isValidObjectId(q._id)) {
-    return c.json({ msg: 'ObjectId mal formaté' }, 400);
-  }
-
-  const tryToUpdate = await User.findOneAndUpdate(q, updateQuery, {
+  const updatedUser = await User.findOneAndUpdate(q, updateQuery, {
     new: true,
   });
 
-  if (!tryToUpdate) {
-    return c.json({ msg: 'Utilisateur non trouvé' }, 404);
-  }
-
-  return c.json(tryToUpdate, 200);
+  return c.json(updatedUser, 200);
 });
 
 api.delete('/:id', roleMiddleware(Role.ADMIN), async (c) => {
