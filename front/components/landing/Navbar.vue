@@ -93,12 +93,11 @@ const logout = () => {
           <LandingLink href="/signup" size="md" block>S'inscrire</LandingLink>
         </div>
         <div v-else class="lg:hidden flex items-center mt-3 gap-4">
-          <p>Bienvenue {{ userStore.userRef?.firstName }} !</p>
+          <LandingLink href="/profil" styleName="muted" size="md" class="flex flex-col">
+            <p>Bienvenue {{ userStore.userRef?.firstName }} !</p>
+            <p class="text-sm text-gray-500">{{ userStore.userRef?.role }}</p>
+          </LandingLink>
           <a href="#" @click="logout()">Se déconnecter</a>
-        </div>
-        <div class="lg:hidden flex items-center mt-3 gap-4" v-else>
-            <LandingLink href="/profil" styleName="muted" size="md">Profil</LandingLink>
-            <LandingLink href="/" @click="logout" size="md">Logout</LandingLink>
         </div>
       </nav>
       <div>
@@ -107,7 +106,10 @@ const logout = () => {
           <LandingLink href="/signup" size="md">S'inscrire</LandingLink>
         </div>
         <div v-else class="hidden lg:flex items-center gap-4">
-          <p>Bienvenue {{ userStore.userRef?.firstName }} !</p>
+          <LandingLink href="/profil" styleName="muted" size="md" class="flex flex-col">
+            <p>Bienvenue {{ userStore.userRef?.firstName }} !</p>
+            <p class="text-sm text-gray-500">{{ userStore.userRef?.role }}</p>
+          </LandingLink>
           <a href="#" @click="logout()">Se déconnecter</a>
         </div>
       </div>

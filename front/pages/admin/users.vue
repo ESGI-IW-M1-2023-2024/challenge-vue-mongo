@@ -6,8 +6,8 @@ definePageMeta({
 });
 
 const users = ref([]);
-const selectedUser = reactive({ _id: null, firstName: '', lastName: '', email: '', password: '', gender: '', role: '' });
-const newUser = reactive({ firstName: '', lastName: '', email: '', role: '', password: '', gender: '' });
+const selectedUser = reactive({ _id: null, firstName: '', lastName: '', email: '', password: '', gender: '', role: '', biography: '', imageUrl: '' });
+const newUser = reactive({ firstName: '', lastName: '', email: '', role: '', password: '', gender: '', biography: '', imageUrl: '' });
 const userDialog = ref(null);
 const newUserModal = ref(null);
 const errorMessage = ref('');
@@ -26,7 +26,7 @@ const closeUserModal = () => {
 
 const openNewUserModal = () => {
   newUserModal.value.showModal();
-  Object.assign(newUser, { firstName: '', lastName: '', email: '', role: '', password: '', gender: '' });
+  Object.assign(newUser, { firstName: '', lastName: '', email: '', role: '', password: '', gender: '', biography: '', imageUrl: '' });
 };
 
 const closeNewUserModal = () => {
@@ -86,6 +86,8 @@ const saveUser = async () => {
               gender: selectedUser.gender,
               email: selectedUser.email,
               role: selectedUser.role,
+              biography: selectedUser.biography,
+              imageUrl: selectedUser.imageUrl,
               password: selectedUser.password,
             }
           : {
@@ -93,6 +95,8 @@ const saveUser = async () => {
             lastName: selectedUser.lastName,
             gender: selectedUser.gender,
             email: selectedUser.email,
+            biography: selectedUser.biography,
+            imageUrl: selectedUser.imageUrl,
             role: selectedUser.role,
           }
       ),
@@ -126,6 +130,8 @@ const addUser = async () => {
         email: newUser.email,
         password: newUser.password,
         role: newUser.role,
+        biography: newUser.biography,
+        imageUrl: newUser.imageUrl,
       }),
     });
 
@@ -195,6 +201,15 @@ onMounted(() => {
           <label class="block">Email:</label>
           <input v-model="selectedUser.email" class="w-full p-2 border rounded" required type="email">
         </div>
+        <div class="mb-5">
+          <label class="block">Image:</label>
+          <input class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100" v-model="selectedUser.imageUrl"/>
+        </div>
+        <div class="mb-5">
+          <label class="block">Biography:</label>
+          <textarea class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100" v-model="selectedUser.biography">
+          </textarea>
+        </div>
         <div>
           <label class="block">Mot de passe:</label>
           <input v-model="selectedUser.password" class="w-full p-2 border rounded" type="password">
@@ -238,9 +253,14 @@ onMounted(() => {
           <label class="block">Email:</label>
           <input v-model="newUser.email" class="w-full p-2 border rounded" required type="email">
         </div>
-        <div>
-          <label class="block">Mot de passe:</label>
-          <input v-model="newUser.password" class="w-full p-2 border rounded" required type="password">
+        <div class="mb-5">
+          <label class="block">Image:</label>
+          <input class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100" v-model="newUser.imageUrl"/>
+        </div>
+        <div class="mb-5">
+          <label class="block">Biography:</label>
+          <textarea class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100" v-model="newUser.biography">
+          </textarea>
         </div>
         <div>
           <label class="block">Role:</label>
@@ -249,6 +269,10 @@ onMounted(() => {
             <option value="mentor">Mentor</option>
             <option value="admin">Admin</option>
           </select>
+        </div>
+        <div>
+          <label class="block">Mot de passe:</label>
+          <input v-model="newUser.password" class="w-full p-2 border rounded" required type="password">
         </div>
         <div class="flex justify-end space-x-2">
           <button type="button" @click="closeNewUserModal" class="px-4 py-2 bg-gray-300 rounded">Annuler</button>

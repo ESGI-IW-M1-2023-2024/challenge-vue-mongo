@@ -7,6 +7,7 @@ definePageMeta({
 
 const errorMessage = ref('');
 const password = ref('');
+const userStore = useUserStore();
 
 interface User {
   tokens: string;
@@ -30,10 +31,10 @@ const user = ref<User>({
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/users/' + localStorage.getItem('userId'), {
+    const response = await fetch('http://localhost:3000/api/users/' + userStore.userRef?.id, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${userStore.tokenRef}`,
         'Content-Type': 'application/json',
       },
     });
@@ -52,10 +53,10 @@ onMounted(async () => {
 
 const handleSubmit = async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/users/' + localStorage.getItem('userId'), {
+    const response = await fetch('http://localhost:3000/api/users/' + userStore.userRef?.id, {
       method: 'PATCH',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${userStore.tokenRef}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(
@@ -64,12 +65,16 @@ const handleSubmit = async () => {
               firstName: user.value.firstName,
               lastName: user.value.lastName,
               email: user.value.email,
+              biography: user.value.biography,
+              imageUrl: user.value.imageUrl,
               password: password.value,
             }
           : {
               firstName: user.value.firstName,
               lastName: user.value.lastName,
               email: user.value.email,
+              biography: user.value.biography,
+              imageUrl: user.value.imageUrl,
             }
       ),
     });
@@ -110,7 +115,6 @@ const handleSubmit = async () => {
           required
           class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100"
           name="firstName"
-          :disabled="user.role !== 'admin'"
         />
       </div>
       <div class="mb-5">
@@ -121,7 +125,6 @@ const handleSubmit = async () => {
           required
           class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100"
           name="lastName"
-          :disabled="user.role !== 'admin'"
         />
       </div>
       <div class="mb-5">
@@ -132,7 +135,6 @@ const handleSubmit = async () => {
           required
           class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100"
           name="email"
-          :disabled="user.role !== 'admin'"
         />
       </div>
       <div class="mb-5">
@@ -142,10 +144,18 @@ const handleSubmit = async () => {
           placeholder="image url"
           class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100"
           name="imageUrl"
-          :disabled="user.role !== 'admin'"
         />
       </div>
-      <div class="mb-3" v-if="user.role == 'admin'">
+      <div class="mb-5">
+        <textarea
+          v-model="user.biography"
+          placeholder="Bio"
+          class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100"
+          name="biography"
+        >
+        </textarea>
+      </div>
+      <div class="mb-3">
         <input
           v-model="password"
           type="password"
@@ -155,7 +165,7 @@ const handleSubmit = async () => {
           name="password"
         ></input>
       </div>
-      <LandingButton v-if="user.role == 'admin'" type="submit" size="lg" block>Update</LandingButton>
+      <LandingButton type="submit" size="lg" block>Enregistrer</LandingButton>
       <div id="result" class="mt-3 text-center">{{ errorMessage }}</div>
     </form>
   </LandingContainer>
