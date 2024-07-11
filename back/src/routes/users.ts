@@ -41,11 +41,17 @@ api.get('/', roleMiddleware(Role.ADMIN), async (c) => {
 api.get('/mentors', roleMiddleware(Role.USER), async (c) => {
   const page = parseInt(c.req.query('page') || '1');
   const limit = parseInt(c.req.query('limit') || '10');
+  const search = c.req.query('search') || '';
   const skip = (page - 1) * limit;
+  const filter: any = { role: Role.MENTOR };
+
+  if (search) {
+    filter['technologies.label'] = { $regex: search, $options: 'i' };
+  }
 
   try {
-    const mentors = await User.find({ role: Role.MENTOR }).skip(skip).limit(limit);
-    const totalMentors = await User.countDocuments({ role: Role.MENTOR });
+    const mentors = await User.find(filter).skip(skip).limit(limit);
+    const totalMentors = await User.countDocuments(filter);
     return c.json(
       {
         page,
@@ -166,7 +172,7 @@ api.post('/:id/technologies', roleMiddleware(Role.USER), async (c) => {
     return c.json({ error: 'Utilisateur non trouvé' }, 404);
   }
 
-  if (user.role !== Role.ADMIN && user._id.toString() !== loggedUser._id.toString()) {
+  if (loggedUser.role !== Role.ADMIN && user._id.toString() !== loggedUser._id.toString()) {
     return c.json({ error: "Vous n'avez pas les droits d'ajouter une technologie à cet utilisateur" }, 403);
   }
 
