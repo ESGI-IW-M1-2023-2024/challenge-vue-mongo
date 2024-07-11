@@ -20,13 +20,14 @@ const menuitems = [
 
 const open = ref(false);
 const isLogged = ref(false);
+const userStore = useUserStore();
 
 onMounted(async () => {
   try {
     const response = await fetch('http://localhost:3000/api/checkLogin', {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${userStore.tokenRef}`,
         'Content-Type': 'application/json',
       },
     });
@@ -43,7 +44,8 @@ onMounted(async () => {
 
 // gestion du logout qui supprime le token du localstorage
 const logout = () => {
-  localStorage.removeItem('token');
+  userStore.tokenRef = '';
+  userStore.userRef = null;
   isLogged.value = false;
   window.location.href = '/';
 };
@@ -82,7 +84,7 @@ const logout = () => {
           <LandingLink href="/signup" size="md" block>S'inscrire</LandingLink>
         </div>
         <div v-else class="lg:hidden flex items-center mt-3 gap-4">
-          <p>Bienvenue !</p>
+          <p>Bienvenue {{ userStore.userRef?.firstName }} !</p>
           <a href="#" @click="logout()">Se déconnecter</a>
         </div>
       </nav>
@@ -92,7 +94,7 @@ const logout = () => {
           <LandingLink href="/signup" size="md">S'inscrire</LandingLink>
         </div>
         <div v-else class="hidden lg:flex items-center gap-4">
-          <p>Bienvenue !</p>
+          <p>Bienvenue {{ userStore.userRef?.firstName }} !</p>
           <a href="#" @click="logout()">Se déconnecter</a>
         </div>
       </div>

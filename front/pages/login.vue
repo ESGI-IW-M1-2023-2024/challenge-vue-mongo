@@ -29,11 +29,10 @@ const handleSubmit = async () => {
     if (response.ok) {
       const data = await response.json();
       const token = data.token;
-      localStorage.setItem('token', token);
+      //localStorage.setItem('token', token);
       userStore.setToken(token);
       userStore.setUser(data.id);
-      console.log('token', userStore.tokenRef);
-      router.back();
+      window.location.href = '/';
     } else {
       const data = await response.json();
       errorMessage.value = data.message;
