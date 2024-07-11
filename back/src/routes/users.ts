@@ -8,13 +8,49 @@ import { Comment } from '../models/comment';
 const api = new Hono().basePath('/users');
 
 api.get('/', roleMiddleware(Role.ADMIN), async (c) => {
-  const users = await User.find();
-  return c.json(users, 200);
+  const page = parseInt(c.req.query('page') || '1');
+  const limit = parseInt(c.req.query('limit') || '10');
+  const skip = (page - 1) * limit;
+
+  try {
+    const users = await User.find().skip(skip).limit(limit);
+    const totalUsers = await User.countDocuments();
+    return c.json(
+      {
+        page,
+        limit,
+        totalPages: Math.ceil(totalUsers / limit),
+        totalResults: totalUsers,
+        results: users,
+      },
+      200,
+    );
+  } catch {
+    c.json({ msg: 'Erreur lors de la récupération des utilisateurs' }, 500);
+  }
 });
 
 api.get('/mentors', roleMiddleware(Role.USER), async (c) => {
-  const mentors = await User.find({ role: Role.MENTOR });
-  return c.json(mentors, 200);
+  const page = parseInt(c.req.query('page') || '1');
+  const limit = parseInt(c.req.query('limit') || '10');
+  const skip = (page - 1) * limit;
+
+  try {
+    const mentors = await User.find({ role: Role.MENTOR }).skip(skip).limit(limit);
+    const totalMentors = await User.countDocuments({ role: Role.MENTOR });
+    return c.json(
+      {
+        page,
+        limit,
+        totalPages: Math.ceil(totalMentors / limit),
+        totalResults: totalMentors,
+        results: mentors,
+      },
+      200,
+    );
+  } catch {
+    c.json({ msg: 'Erreur lors de la récupération des mentors' }, 500);
+  }
 });
 
 api.get('/:id', roleMiddleware(Role.ADMIN), async (c) => {
@@ -126,9 +162,26 @@ api.post('/:id/technologies', roleMiddleware(Role.USER), async (c) => {
 
 api.get('/:id/comments', roleMiddleware(Role.USER), async (c) => {
   const idUser = c.req.param('id');
+  const page = parseInt(c.req.query('page') || '1');
+  const limit = parseInt(c.req.query('limit') || '10');
+  const skip = (page - 1) * limit;
 
-  const comments = await Comment.find({ idUser });
-  return c.json(comments, 201);
+  try {
+    const comments = await Comment.find({ idUser }).skip(skip).limit(limit);
+    const totalComments = await Comment.countDocuments({ idUser });
+    return c.json(
+      {
+        page,
+        limit,
+        totalPages: Math.ceil(totalComments / limit),
+        totalResults: totalComments,
+        results: comments,
+      },
+      200,
+    );
+  } catch {
+    return c.json({ msg: "Erreur lors de la récupération des commentaires de l'utilisateur" }, 500);
+  }
 });
 
 api.post('/:id/comments', roleMiddleware(Role.USER), async (c) => {

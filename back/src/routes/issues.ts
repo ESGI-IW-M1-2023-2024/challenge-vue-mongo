@@ -7,8 +7,26 @@ import roleMiddleware from '../middleware/role-middleware';
 const api = new Hono().basePath('/issues');
 
 api.get('/', roleMiddleware(Role.USER), async (c) => {
-  const issue = await Issue.find();
-  return c.json(issue, 200);
+  const page = parseInt(c.req.query('page') || '1');
+  const limit = parseInt(c.req.query('limit') || '10');
+  const skip = (page - 1) * limit;
+
+  try {
+    const issue = await Issue.find().skip(skip).limit(limit);
+    const totalIssues = await Issue.countDocuments();
+    return c.json(
+      {
+        page,
+        limit,
+        totalPages: Math.ceil(totalIssues / limit),
+        totalResults: totalIssues,
+        results: issue,
+      },
+      200,
+    );
+  } catch {
+    return c.json({ msg: 'Erreur lors de la récupération des issues' }, 500);
+  }
 });
 
 api.get('/:id', roleMiddleware(Role.USER), async (c) => {
