@@ -119,11 +119,11 @@ api.patch('/:id', roleMiddleware(Role.USER), async (c) => {
     return c.json({ msg: 'Utilisateur non trouvé' }, 404);
   }
 
-  if (user.role !== Role.ADMIN && user._id.toString() !== loggedUser._id.toString()) {
+  if (loggedUser.role !== Role.ADMIN && user._id.toString() !== loggedUser._id.toString()) {
     return c.json({ error: "Vous n'avez pas les droits de modifier cet utilisateur" }, 403);
   }
 
-  if (user.role !== Role.ADMIN) {
+  if (loggedUser.role !== Role.ADMIN) {
     delete body.role;
     delete body.tokens;
     delete body.issues;
