@@ -1,63 +1,37 @@
 <script setup>
 definePageMeta({
-  layout: "landing",
+  layout: 'landing',
 });
 
 const pricing = [
   {
-    name: "Personal",
-    price: "Free",
+    name: 'Client',
+    price: '50€ / 50 crédits',
     popular: false,
-    features: [
-      "Lifetime free",
-      "Up to 3 users",
-      "Unlimited Pages",
-      "Nuxt Sub domain",
-      "Basic Integrations",
-      "Community Support",
-    ],
+    features: ["1 crédit -> 5 min d'aide", 'Discution par chat', 'Discution en audio', "Partage d'écran avec le mentor"],
     button: {
-      text: "Get Started",
-      link: "/",
+      text: 'Acheter',
+      link: '/',
     },
   },
   {
-    name: "Startup",
-    price: {
-      monthly: "$19",
-      annual: "$16",
-      discount: "10%",
-      original: "$24",
-    },
+    name: 'Client',
+    price: '250€ / 300 crédits',
     popular: true,
-    features: [
-      "All Free Features",
-      "Up to 20 users",
-      "20 Custom domains",
-      "Unlimited Collaborators",
-      "Advanced Integrations",
-      "Priority Support",
-    ],
+    features: ["1 crédit -> 5 min d'aide", '50 crédits offerts', 'Discution par chat', 'Discution en audio', "Partage d'écran avec le mentor"],
     button: {
-      text: "Get Started",
-      link: "#",
+      text: 'Acheter',
+      link: '/',
     },
   },
   {
-    name: "Enterprise",
-    price: "Custom",
+    name: 'Mentor',
+    price: 'Gratuit',
     popular: false,
-    features: [
-      "All Pro Features",
-      "Unlimited Custom domains",
-      "99.99% Uptime SLA",
-      "SAML & SSO Integration",
-      "Dedicated Account Manager",
-      "24/7 Phone Support",
-    ],
+    features: ['Rémunération par minutes', 'Chat avec les clients', 'Suivi des interventions', 'Collaborations illimitées', "Partage d'écran", 'Support prioritaire'],
     button: {
-      text: "Contact us",
-      link: "/contact",
+      text: "S'inscrire",
+      link: '/register',
     },
   },
 ];
@@ -66,10 +40,8 @@ const pricing = [
 <template>
   <LandingContainer>
     <LandingSectionhead>
-      <template v-slot:title>Pricing</template>
-      <template v-slot:desc
-        >Simple & Predictable pricing. No Surprises.</template
-      >
+      <template v-slot:title>Tarifs</template>
+      <template v-slot:desc>Simple, prédictible, sans surprise</template>
     </LandingSectionhead>
 
     <div class="grid md:grid-cols-3 gap-10 mx-auto max-w-screen-lg mt-12">
