@@ -154,12 +154,6 @@ onMounted(() => {
 })
 </script>
 
-<style>
-  dialog {
-    max-width: 500px;
-    margin: 10% auto;
-  }
-</style>
 <template>
   <div class="p-4">
     <div class="flex justify-between items-center p-2">
@@ -210,11 +204,11 @@ onMounted(() => {
         </div>
         <div class="mb-5">
           <label class="block">Image:</label>
-          <input class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100" v-model="selectedUser.imageUrl"/>
+          <input class="w-full p-2 border rounded" v-model="selectedUser.imageUrl"/>
         </div>
         <div class="mb-5">
           <label class="block">Biography:</label>
-          <textarea class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100" v-model="selectedUser.biography">
+          <textarea class="w-full p-2 border rounded" v-model="selectedUser.biography">
           </textarea>
         </div>
         <div>
@@ -262,11 +256,11 @@ onMounted(() => {
         </div>
         <div class="mb-5">
           <label class="block">Image:</label>
-          <input class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100" v-model="newUser.imageUrl"/>
+          <input class="w-full p-2 border rounded" v-model="newUser.imageUrl"/>
         </div>
         <div class="mb-5">
           <label class="block">Biography:</label>
-          <textarea class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100" v-model="newUser.biography">
+          <textarea class="w-full p-2 border rounded" v-model="newUser.biography">
           </textarea>
         </div>
         <div>
