@@ -9,11 +9,13 @@ const api = new Hono().basePath('/technologies');
 api.get('/', roleMiddleware(Role.USER), async (c) => {
   const page = parseInt(c.req.query('page') || '1');
   const limit = parseInt(c.req.query('limit') || '10');
+  const search = c.req.query('search') || '';
   const skip = (page - 1) * limit;
+  const filter = { label: { $regex: search, $options: 'i' } };
 
   try {
-    const technologies = await Technology.find().skip(skip).limit(limit);
-    const totalTechnologies = await Technology.countDocuments();
+    const technologies = await Technology.find(filter).skip(skip).limit(limit);
+    const totalTechnologies = await Technology.countDocuments(filter);
     return c.json(
       {
         page,
