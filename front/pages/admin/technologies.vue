@@ -156,7 +156,7 @@ onMounted(() => {
       </li>
     </ul>
 
-    <dialog ref="technoDialog" class="p-6 border rounded-md bg-white">
+    <dialog ref="technoDialog" class="p-6 border rounded-md bg-white w-100">
       <form method="dialog" @submit.prevent="saveTechno" class="space-y-4">
         <h2 class="text-xl font-bold">Modifier Technologie</h2>
         <div>
@@ -171,7 +171,7 @@ onMounted(() => {
       </form>
     </dialog>
 
-    <dialog ref="newTechnoModal" class="p-6 border rounded-md bg-white">
+    <dialog ref="newTechnoModal" class="p-6 border rounded-md bg-white w-100">
       <form method="dialog" @submit.prevent="addTechno" class="space-y-4">
         <h2 class="text-xl font-bold">Nouvelle Technologie</h2>
         <div>

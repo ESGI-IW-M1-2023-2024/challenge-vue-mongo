@@ -185,7 +185,7 @@ onMounted(() => {
       </li>
     </ul>
 
-    <dialog ref="userDialog" class="p-6 border rounded-md bg-white">
+    <dialog ref="userDialog" class="p-6 border rounded-md bg-white w-100">
       <form method="dialog" @submit.prevent="saveUser" class="space-y-4">
         <h2 class="text-xl font-bold">Modifier Utilisateur</h2>
         <div>
@@ -237,7 +237,7 @@ onMounted(() => {
       </form>
     </dialog>
 
-    <dialog ref="newUserModal" class="p-6 border rounded-md bg-white">
+    <dialog ref="newUserModal" class="p-6 border rounded-md bg-white w-100">
       <form method="dialog" @submit.prevent="addUser" class="space-y-4">
         <h2 class="text-xl font-bold">Nouvel Utilisateur</h2>
         <div>
