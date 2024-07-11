@@ -41,13 +41,9 @@ onMounted(async () => {
   } catch (error) {
     console.error(error);
   }
-
-  toast("I'm a toast!");
 });
 
 const submit = async () => {
-  console.log(title.value, comment.value, selectedTechnologies.value);
-
   // reconstruct the array object technologies
   let technologies: ITechnology[] = [];
 
@@ -74,7 +70,6 @@ const submit = async () => {
   } else {
     technologies = [];
   }
-  console.log(technologies);
 
   try {
     const response = await fetch('http://localhost:3000/api/issues', {
@@ -98,12 +93,15 @@ const submit = async () => {
     });
 
     if (response.ok) {
+      toast.success('Votre demande a bien été envoyée');
       navigateTo('/experts/' + idMentor);
     } else {
+      toast.error('Une erreur est survenue');
       const data = await response.json();
       console.error(data);
     }
   } catch (error) {
+    toast.error('Une erreur est survenue');
     console.error(error);
   }
 };

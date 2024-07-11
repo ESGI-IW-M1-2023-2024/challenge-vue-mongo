@@ -35,8 +35,8 @@ const handleSubmit = async () => {
       const user = data.user
       userStore.setToken(token);
       userStore.setUser(user);
-      toast.success('You are now logged in');
-      window.location.href = '/';
+      toast.success('Vous êtes maintenant connecté');
+      navigateTo('/');
     } else {
       const data = await response.json();
       errorMessage.value = data.message;
