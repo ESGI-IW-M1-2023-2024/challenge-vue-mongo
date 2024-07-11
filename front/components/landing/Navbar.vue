@@ -5,15 +5,15 @@ const menuitems = [
     path: '/experts',
   },
   {
-    title: 'Pricing',
+    title: 'Tarifs',
     path: '/pricing',
   },
   {
-    title: 'About',
+    title: 'A propos',
     path: '/about',
   },
   {
-    title: 'Contact',
+    title: 'Contacts',
     path: '/contact',
   },
 ];
