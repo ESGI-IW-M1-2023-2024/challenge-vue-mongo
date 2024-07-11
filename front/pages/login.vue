@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { useToast } from 'vue-toastification';
 
 definePageMeta({
   layout: "landing",
@@ -11,6 +12,7 @@ const errorMessage = ref('');
 const userStore = useUserStore();
 const { tokenRef } = storeToRefs(userStore);
 const router = useRouter();
+const toast = useToast();
 
 const handleSubmit = async () => {
 
@@ -33,7 +35,8 @@ const handleSubmit = async () => {
       const user = data.user
       userStore.setToken(token);
       userStore.setUser(user);
-      window.location.href = '/';
+      toast.success('Vous êtes maintenant connecté');
+      navigateTo('/');
     } else {
       const data = await response.json();
       errorMessage.value = data.message;

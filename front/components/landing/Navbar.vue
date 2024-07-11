@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useToast } from 'vue-toastification';
 const menuitems = [
   {
     title: 'Experts',
@@ -35,6 +36,7 @@ const menuitems = [
 const open = ref(false);
 const isLogged = ref(false);
 const userStore = useUserStore();
+const toast = useToast();
 
 onMounted(async () => {
   try {
@@ -61,7 +63,9 @@ const logout = () => {
   userStore.tokenRef = '';
   userStore.userRef = null;
   isLogged.value = false;
-  window.location.href = '/';
+  toast.success('Vous êtes maintenant déconnecté');
+  navigateTo('/');
+  //window.location.href = '/';
 };
 </script>
 

@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '~/stores/user';
+import { useToast } from 'vue-toastification';
 import type { IUser } from '../../../../back/src/models/user';
 import type { ITechnology } from '../../../../back/src/models/technology';
 
@@ -14,6 +15,7 @@ const route = useRoute();
 const loading = ref(true);
 const userStore = useUserStore();
 const idMentor = route.params.id;
+const toast = useToast();
 
 const title = ref('');
 const comment = ref('');
@@ -42,8 +44,6 @@ onMounted(async () => {
 });
 
 const submit = async () => {
-  console.log(title.value, comment.value, selectedTechnologies.value);
-
   // reconstruct the array object technologies
   let technologies: ITechnology[] = [];
 
@@ -70,7 +70,6 @@ const submit = async () => {
   } else {
     technologies = [];
   }
-  console.log(technologies);
 
   try {
     const response = await fetch('http://localhost:3000/api/issues', {
@@ -94,12 +93,15 @@ const submit = async () => {
     });
 
     if (response.ok) {
+      toast.success('Votre demande a bien été envoyée');
       navigateTo('/experts/' + idMentor);
     } else {
+      toast.error('Une erreur est survenue');
       const data = await response.json();
       console.error(data);
     }
   } catch (error) {
+    toast.error('Une erreur est survenue');
     console.error(error);
   }
 };
