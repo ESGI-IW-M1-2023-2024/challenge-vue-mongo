@@ -15,14 +15,13 @@ const totalUsers = ref(0);
 const totalPages = ref(1);
 const router = useRouter();
 const userStore = useUserStore();
+const searchQuery = ref('');
 
-onMounted(async () => {
-  if (!userStore.tokenRef) {
-    router.push('/login');
-  }
+
+const fetchMentor = async () => {
 
   try {
-    const response = await fetch('http://localhost:3000/api/users/mentors', {
+    const response = await fetch('http://localhost:3000/api/users/mentors?search=' + searchQuery.value, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${userStore.tokenRef}`,
@@ -46,6 +45,14 @@ onMounted(async () => {
   } catch (error) {
     console.error(error);
   }
+};
+
+onMounted(async () => {
+  if (!userStore.tokenRef) {
+    router.push('/login');
+  }
+
+  await fetchMentor();
 });
 
 const calculateColWidth = (userCount: number) => {
@@ -53,6 +60,37 @@ const calculateColWidth = (userCount: number) => {
   // Sinon, utiliser 4 comme largeur de colonne standard
   return userCount < 4 ? Math.max(12 / userCount, 4) : 4;
 };
+
+const handlePageChange = async (page: number) => {
+  loading.value = true;
+
+  try {
+    const response = await fetch(`http://localhost:3000/api/users/mentors?page=${page}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${userStore.tokenRef}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      users.value = data.results;
+      totalUsers.value = data.totalResults;
+      totalPages.value = data.totalPages;
+      usersPerPage.value = data.limit;
+      currentPage.value = data.page;
+
+      loading.value = false;
+    } else {
+      const data = await response.json();
+      errorMessage.value = data.message;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 </script>
 
 <template>
@@ -62,7 +100,7 @@ const calculateColWidth = (userCount: number) => {
       <template v-slot:desc>Trouvez les experts chauds dans votre région</template>
     </LandingSectionhead>
 
-    <v-text-field append-inner-icon="mdi-magnify" density="compact" label="Rechercher par techno" variant="solo" hide-details single-line class="mx-auto mt-5"></v-text-field>
+    <v-text-field v-model="searchQuery" @input="fetchMentor" append-inner-icon="mdi-magnify" density="compact" label="Rechercher par techno" variant="solo" hide-details single-line class="mx-auto mt-5"></v-text-field>
 
     <v-container v-if="!loading">
       <v-row class="items-stretch">
@@ -88,6 +126,12 @@ const calculateColWidth = (userCount: number) => {
         </v-col>
       </v-row>
     </v-container>
-    <v-pagination :length="totalPages" class="my-10" v-model="currentPage"></v-pagination>
+        <v-pagination 
+          :length="totalPages" 
+          class="my-10" 
+          v-model="currentPage" 
+          @update:model-value="handlePageChange"
+        >
+        </v-pagination>
   </LandingContainer>
 </template>

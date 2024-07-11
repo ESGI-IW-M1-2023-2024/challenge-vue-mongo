@@ -18,8 +18,8 @@ const team = [
     },
   },
   {
-    name: "Marcell Ziemann",
-    title: "Principal Strategist",
+    name: "Sabou Chtonqu",
+    title: "Cooker Engineer Senior",
     avatar: {
       src: TeamImg2,
       width: 580,
