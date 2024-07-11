@@ -16,6 +16,7 @@ enum Gender {
 }
 
 interface IUser {
+  _id: Types.ObjectId;
   firstName: string;
   lastName: string;
   email: string;

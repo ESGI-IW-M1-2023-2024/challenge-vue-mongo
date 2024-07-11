@@ -1,11 +1,11 @@
 meta {
-  name: edit-user
+  name: create-comment-on-user
   type: http
-  seq: 4
+  seq: 1
 }
 
-patch {
-  url: {{base_url}}/users/{{id}}
+post {
+  url: {{base_url}}/users/{{id}}/comments
   body: json
   auth: bearer
 }
@@ -16,7 +16,7 @@ auth:bearer {
 
 body:json {
   {
-    "comments": []
+    "content": "J'adore ce mentor, c'est cours sont géniaux !"
   }
 }
 

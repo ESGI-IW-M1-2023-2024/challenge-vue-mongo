@@ -1,0 +1,20 @@
+meta {
+  name: delete-comment-from-user
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{base_url}}/users/{{userId}}/comments/{{commentId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+vars:pre-request {
+  commentId: 668ef9f9344268e6c0e25d8b
+  userId: 668bbc388d553ffef66dd4a8
+}

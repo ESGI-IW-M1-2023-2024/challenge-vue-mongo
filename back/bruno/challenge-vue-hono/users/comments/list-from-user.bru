@@ -1,11 +1,11 @@
 meta {
-  name: get-comment
+  name: list-from-user
   type: http
-  seq: 3
+  seq: 4
 }
 
 get {
-  url: {{base_url}}/comments/{{id}}
+  url: {{base_url}}/users/{{id}}/comments
   body: none
   auth: bearer
 }
@@ -15,5 +15,5 @@ auth:bearer {
 }
 
 vars:pre-request {
-  id: 668eec0ee343e6268d5b7839
+  id: 668bbc388d553ffef66dd4a8
 }

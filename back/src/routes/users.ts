@@ -3,6 +3,7 @@ import { IUser, Role, User } from '../models/user';
 import { isValidObjectId } from 'mongoose';
 import roleMiddleware from '../middleware/role-middleware';
 import { Technology } from '../models/technology';
+import { Comment } from '../models/comment';
 
 const api = new Hono().basePath('/users');
 
@@ -121,6 +122,90 @@ api.post('/:id/technologies', roleMiddleware(Role.USER), async (c) => {
   user.technologies?.push(technology);
   await user.save();
   return c.json(user, 200);
+});
+
+api.get('/:id/comments', roleMiddleware(Role.USER), async (c) => {
+  const idUser = c.req.param('id');
+
+  const comments = await Comment.find({ idUser });
+  return c.json(comments, 201);
+});
+
+api.post('/:id/comments', roleMiddleware(Role.USER), async (c) => {
+  const idMentor = c.req.param('id');
+  const loggedUser: IUser = c.get('user');
+  const { content } = await c.req.json();
+
+  if (!isValidObjectId(idMentor)) {
+    return c.json({ msg: 'ObjectId mal formaté' }, 400);
+  }
+
+  const mentor = await User.findById({ _id: idMentor });
+
+  if (!mentor) {
+    return c.json({ msg: 'Mentor non trouvé' }, 404);
+  }
+
+  if (idMentor === loggedUser._id.toString()) {
+    return c.json({ msg: 'Vous ne pouvez pas commenter votre propre profil' }, 400);
+  }
+
+  const newComment = new Comment({
+    idUser: loggedUser._id,
+    idMentor,
+    content,
+  });
+
+  mentor.comments?.push(newComment._id);
+  await newComment.save();
+  await mentor.save();
+  return c.json(mentor.comments);
+});
+
+api.patch('/:idMentor/comments/:idComment', roleMiddleware(Role.USER), async (c) => {
+  const idComment = c.req.param('idComment');
+  const loggedUser: IUser = c.get('user');
+  const { content } = await c.req.json();
+
+  if (!isValidObjectId(idComment)) {
+    return c.json({ msg: 'ObjectId mal formaté' }, 400);
+  }
+
+  const comment = await Comment.findOne({ _id: idComment });
+
+  if (!comment) {
+    return c.json({ error: 'Commentaire non trouvé' }, 400);
+  }
+
+  if (comment.idUser.toString() !== loggedUser._id.toString()) {
+    return c.json({ error: "Vous ne pouvez pas modifier le commentaire d'un autre utilisateur" }, 403);
+  }
+
+  comment.content = content;
+  await comment.save();
+  return c.json(comment, 200);
+});
+
+api.delete('/:idMentor/comments/:idComment', roleMiddleware(Role.USER), async (c) => {
+  const idComment = c.req.param('idComment');
+  const loggedUser: IUser = c.get('user');
+
+  if (!isValidObjectId(idComment)) {
+    return c.json({ msg: 'ObjectId mal formaté' }, 400);
+  }
+
+  const comment = await Comment.findById(idComment);
+
+  if (!comment) {
+    return c.json({ error: 'Commentaire non trouvé' }, 400);
+  }
+
+  if (comment.idUser.toString() !== loggedUser._id.toString() || loggedUser.role !== Role.ADMIN) {
+    return c.json({ error: "Vous ne pouvez pas supprimer le commentaire d'un autre utilisateur" }, 403);
+  }
+
+  await Comment.deleteOne({ _id: idComment });
+  return c.json({ msg: `Commentaire avec l'id ${comment._id} supprimé avec succès` }, 201);
 });
 
 export default api;
