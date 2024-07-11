@@ -15,7 +15,7 @@ enum Gender {
   OTHER = 'other',
 }
 
-interface IUser {
+export interface IUser {
   _id: Types.ObjectId;
   firstName: string;
   lastName: string;

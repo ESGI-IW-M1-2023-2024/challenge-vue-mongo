@@ -8,8 +8,22 @@ definePageMeta({
 const users = ref([]);
 const errorMessage = ref('');
 const loading = ref(true);
+const currentPage = ref(1);
+const usersPerPage = 2;
+const totalUsers = ref(0);
+const totalPages = computed(() => Math.ceil(totalUsers.value / usersPerPage));
+const router = useRouter();
+const userStore = useUserStore();
+const {tokenRef} = storeToRefs(userStore);
+console.log('token', tokenRef);
 
 onMounted(async () => {
+
+
+
+  if (!userStore.token) {
+    router.push('/login');
+  }
 
   try {
     const response = await fetch('http://localhost:3000/api/users', {
@@ -26,10 +40,10 @@ onMounted(async () => {
       users.value = data;
       loading.value = false;
       console.log(users.value);
+      totalUsers.value = data.length;
     } else {
       const data = await response.json();
       errorMessage.value = data.message;
-      return navigateTo('/login');
     }
   } catch (error) {
     console.error(error);
