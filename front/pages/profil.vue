@@ -14,6 +14,8 @@ interface User {
   lastName: string;
   email: string;
   role: string;
+  imageUrl: string;
+  biography: string;
 }
 
 const user = ref<User>({
@@ -22,6 +24,8 @@ const user = ref<User>({
   lastName: '',
   email: '',
   role: '',
+  imageUrl: '',
+  biography: '',
 });
 
 onMounted(async () => {
@@ -128,6 +132,16 @@ const handleSubmit = async () => {
           required
           class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100"
           name="email"
+          :disabled="user.role !== 'admin'"
+        />
+      </div>
+      <div class="mb-5">
+        <input
+          v-model="user.imageUrl"
+          type="text"
+          placeholder="image url"
+          class="w-full px-4 py-3 border-2 placeholder:text-gray-800 rounded-md outline-none focus:ring-4 border-gray-300 focus:border-gray-600 ring-gray-100"
+          name="imageUrl"
           :disabled="user.role !== 'admin'"
         />
       </div>
