@@ -28,10 +28,11 @@ const handleSubmit = async () => {
 
     if (response.ok) {
       const data = await response.json();
+      console.log(data.user);
       const token = data.token;
-      //localStorage.setItem('token', token);
+      const user = data.user
       userStore.setToken(token);
-      userStore.setUser(data.id);
+      userStore.setUser(user);
       window.location.href = '/';
     } else {
       const data = await response.json();
