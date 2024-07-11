@@ -13,7 +13,7 @@ onMounted(() => {
 
 <style lang="css">
 iframe {
-  width: 90vw;
-  height: 90vh;
+  width: 97vw !important;
+  height: 87vh !important;
 }
 </style>
