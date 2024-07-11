@@ -111,6 +111,14 @@ api.patch('/:id', roleMiddleware(Role.USER), async (c) => {
     return c.json({ error: "Vous n'avez pas les droits de modifier cet utilisateur" }, 403);
   }
 
+  if (user.role !== Role.ADMIN) {
+    delete body.role;
+    delete body.tokens;
+    delete body.issues;
+    delete body.comments;
+    delete body.likes;
+  }
+
   if (body.password) {
     const salt = await genSalt(10);
     body.password = await hash(body.password, salt);
