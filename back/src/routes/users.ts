@@ -4,6 +4,7 @@ import { isValidObjectId } from 'mongoose';
 import roleMiddleware from '../middleware/role-middleware';
 import { Technology } from '../models/technology';
 import { Comment } from '../models/comment';
+import { genSalt, hash } from 'bcrypt';
 
 const api = new Hono().basePath('/users');
 
@@ -87,6 +88,11 @@ api.patch('/:id', roleMiddleware(Role.ADMIN), async (c) => {
   const q = {
     _id,
   };
+
+  if (body.password) {
+    const salt = await genSalt(10);
+    body.password = await hash(body.password, salt);
+  }
 
   const updateQuery = {
     $set: { ...body },
