@@ -42,7 +42,7 @@ const navigateToContact = () => {
 
 <template>
   <!-- bouton retour en arrière -->
-  <v-btn icon @click="$router.go(-1)" class="m-5 -mb-5">
+  <v-btn icon @click="navigateTo('/experts')" class="m-5 -mb-5">
     <v-icon>mdi-arrow-left</v-icon>
   </v-btn>
   <v-container v-if="!loading">

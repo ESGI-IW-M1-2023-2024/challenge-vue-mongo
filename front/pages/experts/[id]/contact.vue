@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '~/stores/user';
 import type { IUser } from '../../../../back/src/models/user';
+import type { ITechnology } from '../../../../back/src/models/technology';
 
 definePageMeta({
   layout: 'landing',
@@ -16,7 +17,7 @@ const idMentor = route.params.id;
 
 const title = ref('');
 const comment = ref('');
-const selectedTechnologies = ref(null);
+const selectedTechnologies = ref([]);
 
 onMounted(async () => {
   try {
@@ -43,6 +44,34 @@ onMounted(async () => {
 const submit = async () => {
   console.log(title.value, comment.value, selectedTechnologies.value);
 
+  // reconstruct the array object technologies
+  let technologies: ITechnology[] = [];
+
+  if (selectedTechnologies.value.length > 0) {
+    technologies = await Promise.all(
+      selectedTechnologies.value.map(async (id: string) => {
+        try {
+          const techno = await fetch('http://localhost:3000/api/technologies/' + id, {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${userStore.tokenRef}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          if (techno.ok) {
+            return techno.json();
+          }
+          return null;
+        } catch (error) {
+          console.error(error);
+        }
+      })
+    );
+  } else {
+    technologies = [];
+  }
+  console.log(technologies);
+
   try {
     const response = await fetch('http://localhost:3000/api/issues', {
       method: 'POST',
@@ -53,7 +82,8 @@ const submit = async () => {
       body: JSON.stringify({
         idUser: userStore.userRef?.id,
         idMentor: mentor.value?._id,
-        technologies: selectedTechnologies.value,
+        technologies: technologies,
+        title: title.value,
         messages: [
           {
             title: title.value,
