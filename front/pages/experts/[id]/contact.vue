@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '~/stores/user';
+import { useToast } from 'vue-toastification';
 import type { IUser } from '../../../../back/src/models/user';
 import type { ITechnology } from '../../../../back/src/models/technology';
 
@@ -14,6 +15,7 @@ const route = useRoute();
 const loading = ref(true);
 const userStore = useUserStore();
 const idMentor = route.params.id;
+const toast = useToast();
 
 const title = ref('');
 const comment = ref('');
@@ -39,6 +41,8 @@ onMounted(async () => {
   } catch (error) {
     console.error(error);
   }
+
+  toast("I'm a toast!");
 });
 
 const submit = async () => {
