@@ -2,8 +2,6 @@ import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { myEnv } from '../conf';
 import { DbConnect } from './db';
-import { bearerAuth } from 'hono/bearer-auth';
-import VerifyJWTToken from './utils/verify-token';
 
 import users from './routes/users';
 import technologies from './routes/technologies';

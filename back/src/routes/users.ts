@@ -73,14 +73,19 @@ api.get('/mentors', roleMiddleware(Role.USER), async (c) => {
   }
 });
 
-api.get('/:id', roleMiddleware(Role.ADMIN), async (c) => {
+api.get('/:id', roleMiddleware(Role.USER), async (c) => {
   const _id = c.req.param('id');
+  const loggedUser = c.get('user');
 
   if (isValidObjectId(_id)) {
     const oneUser = await User.findOne({ _id });
 
     if (!oneUser) {
       return c.json({ msg: 'Utilisateur non trouvé' }, 404);
+    }
+
+    if (loggedUser.role !== Role.ADMIN && oneUser._id.toString() !== loggedUser._id.toString()) {
+      return c.json({ error: "Vous n'avez pas les droits de voir cet utilisateur" }, 403);
     }
 
     return c.json(oneUser);

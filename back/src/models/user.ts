@@ -3,7 +3,7 @@ import { compare, genSalt, hash } from 'bcrypt';
 import { ITechnology, technologySchema } from './technology';
 import { ILike, likeSchema } from './like';
 
-export enum Role {
+enum Role {
   USER = 'user',
   ADMIN = 'admin',
   MENTOR = 'mentor',
@@ -87,4 +87,4 @@ userSchema.methods.matchPassword = async function (password: string) {
 };
 
 const User = model<IUser>('users', userSchema);
-export { User, IUser };
+export { User, IUser, Role, Gender };
