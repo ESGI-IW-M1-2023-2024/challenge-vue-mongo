@@ -29,7 +29,10 @@ api.get('/', roleMiddleware(Role.ADMIN), async (c) => {
         limit,
         totalPages: Math.ceil(totalUsers / limit),
         totalResults: totalUsers,
-        results: users,
+        results: users.map((user) => {
+          const { password, ...rest } = user.toObject();
+          return rest;
+        }),
       },
       200,
     );
@@ -58,7 +61,10 @@ api.get('/mentors', roleMiddleware(Role.USER), async (c) => {
         limit,
         totalPages: Math.ceil(totalMentors / limit),
         totalResults: totalMentors,
-        results: mentors,
+        results: mentors.map((mentor) => {
+          const { password, ...rest } = mentor.toObject();
+          return rest;
+        }),
       },
       200,
     );
@@ -88,7 +94,7 @@ api.post('/', roleMiddleware(Role.ADMIN), async (c) => {
 
   try {
     const newUser = new User(body);
-    const saveUser = await newUser.save();
+    const { password, ...saveUser } = await newUser.save();
     return c.json(saveUser, 201);
   } catch (error: any) {
     return c.json(error._message, 400);
@@ -134,10 +140,11 @@ api.patch('/:id', roleMiddleware(Role.USER), async (c) => {
     $set: { ...body },
   };
 
-  const updatedUser = await User.findOneAndUpdate(q, updateQuery, {
+  const updatingUser = await User.findOneAndUpdate(q, updateQuery, {
     new: true,
   });
 
+  const { password, ...updatedUser } = updatingUser!.toObject();
   return c.json(updatedUser, 200);
 });
 
