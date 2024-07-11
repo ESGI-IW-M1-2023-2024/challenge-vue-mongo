@@ -5,9 +5,13 @@ meta {
 }
 
 get {
-  url: {{base_url}}/users
+  url: {{base_url}}/users?search=mentor
   body: none
   auth: bearer
+}
+
+query {
+  search: mentor
 }
 
 auth:bearer {
