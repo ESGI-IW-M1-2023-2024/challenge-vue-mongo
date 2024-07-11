@@ -12,6 +12,7 @@ const userDialog = ref(null);
 const newUserModal = ref(null);
 const errorMessage = ref('');
 const userStore = useUserStore();
+const searchQuery = ref('');
 
 
 const openUserModal = (user) => {
@@ -35,7 +36,7 @@ const closeNewUserModal = () => {
 
 const loadUserList = async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/users', {
+    const response = await fetch('http://localhost:3000/api/users?search=' + searchQuery.value, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${userStore.tokenRef}`,
@@ -165,11 +166,17 @@ onMounted(() => {
       <h1 class="text-2xl font-bold mb-4">Liste des Utilisateurs</h1>
       <LandingButton @click="openNewUserModal()" size="md">Nouvel Utilisateur</LandingButton>
     </div>
+    <div class="flex justify-between items-center p-2">
+      <input v-model="searchQuery" @input="loadUserList" class="w-full p-2 border rounded" placeholder="Rechercher un utilisateur">
+    </div>
     <ul class="space-y-2">
       <li v-for="user in users" :key="user.id" class="flex justify-between items-center p-2 border rounded">
-        <div class="flex flex-col">
-          <span>{{ user.firstName }} {{ user.lastName }}</span>
-          <span class="text-sm text-gray-500">{{ user.email }} - {{ user.role }}</span>
+        <div class="flex">
+          <img :src="user.imageUrl" alt="Photo de profil" class="w-10 h-10 rounded-full mr-4">
+          <div class="flex flex-col">
+            <span>{{ user.firstName }} {{ user.lastName }}</span>
+            <span class="text-sm text-gray-500">{{ user.email }} - {{ user.role }}</span>
+          </div>
         </div>
         <div>
           <button @click="deleteUser(user)" class="ml-4 bg-red-500 text-white px-2 py-1 rounded">Supprimer</button>
@@ -178,7 +185,7 @@ onMounted(() => {
       </li>
     </ul>
 
-    <dialog ref="userDialog" class="p-6 border rounded-md bg-white">
+    <dialog ref="userDialog" class="p-6 border rounded-md bg-white w-100">
       <form method="dialog" @submit.prevent="saveUser" class="space-y-4">
         <h2 class="text-xl font-bold">Modifier Utilisateur</h2>
         <div>
@@ -230,7 +237,7 @@ onMounted(() => {
       </form>
     </dialog>
 
-    <dialog ref="newUserModal" class="p-6 border rounded-md bg-white">
+    <dialog ref="newUserModal" class="p-6 border rounded-md bg-white w-100">
       <form method="dialog" @submit.prevent="addUser" class="space-y-4">
         <h2 class="text-xl font-bold">Nouvel Utilisateur</h2>
         <div>

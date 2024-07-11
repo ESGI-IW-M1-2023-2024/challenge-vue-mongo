@@ -21,8 +21,13 @@ const menuitems = [
     role: '',
   },
   {
-    title: 'Users',
+    title: 'Utilisateurs',
     path: '/admin/users',
+    role: 'admin',
+  },
+  {
+    title: 'Technologies',
+    path: '/admin/technologies',
     role: 'admin',
   },
 ];
