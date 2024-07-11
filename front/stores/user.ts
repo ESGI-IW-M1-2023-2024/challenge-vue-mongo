@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-interface IUserStore {
+export interface IUserStore {
   id: string;
   firstName: string;
   lastName: string;
