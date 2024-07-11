@@ -1,0 +1,20 @@
+meta {
+  name: delete-user-tecnology
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{base_url}}/users/{{idUser}}/technologies/{{idTechnology}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+vars:pre-request {
+  idUser: 668bbb2c63d3c7daafc0d5fd
+  idTechnology: 668d03dc25a23eac87e4cc24
+}
