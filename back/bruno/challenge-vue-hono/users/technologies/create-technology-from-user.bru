@@ -1,11 +1,11 @@
 meta {
   name: create-technology-from-user
   type: http
-  seq: 6
+  seq: 1
 }
 
 post {
-  url: {{base_url}}/users/{{id}}/technologies
+  url: {{base_url}}/users/{{idUser}}/technologies
   body: json
   auth: bearer
 }
@@ -21,5 +21,5 @@ body:json {
 }
 
 vars:pre-request {
-  id: 668bbb2c63d3c7daafc0d5fd
+  idUser: 668d36858dc09da0cb76d3ef
 }

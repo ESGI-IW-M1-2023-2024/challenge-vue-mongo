@@ -11,11 +11,18 @@ const api = new Hono().basePath('/users');
 api.get('/', roleMiddleware(Role.ADMIN), async (c) => {
   const page = parseInt(c.req.query('page') || '1');
   const limit = parseInt(c.req.query('limit') || '10');
+  const search = c.req.query('search');
   const skip = (page - 1) * limit;
 
+  const filter: any = {};
+  if (search) {
+    const searchRegex = { $regex: search, $options: 'i' };
+    filter.$or = [{ firstName: searchRegex }, { lastName: searchRegex }, { email: searchRegex }, { role: searchRegex }];
+  }
+
   try {
-    const users = await User.find().skip(skip).limit(limit);
-    const totalUsers = await User.countDocuments();
+    const users = await User.find(filter).skip(skip).limit(limit);
+    const totalUsers = await User.countDocuments(filter);
     return c.json(
       {
         page,
@@ -34,11 +41,17 @@ api.get('/', roleMiddleware(Role.ADMIN), async (c) => {
 api.get('/mentors', roleMiddleware(Role.USER), async (c) => {
   const page = parseInt(c.req.query('page') || '1');
   const limit = parseInt(c.req.query('limit') || '10');
+  const search = c.req.query('search') || '';
   const skip = (page - 1) * limit;
+  const filter: any = { role: Role.MENTOR };
+
+  if (search) {
+    filter['technologies.label'] = { $regex: search, $options: 'i' };
+  }
 
   try {
-    const mentors = await User.find({ role: Role.MENTOR }).skip(skip).limit(limit);
-    const totalMentors = await User.countDocuments({ role: Role.MENTOR });
+    const mentors = await User.find(filter).skip(skip).limit(limit);
+    const totalMentors = await User.countDocuments(filter);
     return c.json(
       {
         page,
@@ -82,12 +95,35 @@ api.post('/', roleMiddleware(Role.ADMIN), async (c) => {
   }
 });
 
-api.patch('/:id', roleMiddleware(Role.ADMIN), async (c) => {
+api.patch('/:id', roleMiddleware(Role.USER), async (c) => {
   const _id = c.req.param('id');
   const body = await c.req.json();
   const q = {
     _id,
   };
+
+  if (!isValidObjectId(q._id)) {
+    return c.json({ msg: 'ObjectId mal formaté' }, 400);
+  }
+
+  const user = await User.findOne({ _id });
+  const loggedUser = c.get('user');
+
+  if (!user) {
+    return c.json({ msg: 'Utilisateur non trouvé' }, 404);
+  }
+
+  if (user.role !== Role.ADMIN && user._id.toString() !== loggedUser._id.toString()) {
+    return c.json({ error: "Vous n'avez pas les droits de modifier cet utilisateur" }, 403);
+  }
+
+  if (user.role !== Role.ADMIN) {
+    delete body.role;
+    delete body.tokens;
+    delete body.issues;
+    delete body.comments;
+    delete body.likes;
+  }
 
   if (body.password) {
     const salt = await genSalt(10);
@@ -98,19 +134,11 @@ api.patch('/:id', roleMiddleware(Role.ADMIN), async (c) => {
     $set: { ...body },
   };
 
-  if (!isValidObjectId(q._id)) {
-    return c.json({ msg: 'ObjectId mal formaté' }, 400);
-  }
-
-  const tryToUpdate = await User.findOneAndUpdate(q, updateQuery, {
+  const updatedUser = await User.findOneAndUpdate(q, updateQuery, {
     new: true,
   });
 
-  if (!tryToUpdate) {
-    return c.json({ msg: 'Utilisateur non trouvé' }, 404);
-  }
-
-  return c.json(tryToUpdate, 200);
+  return c.json(updatedUser, 200);
 });
 
 api.delete('/:id', roleMiddleware(Role.ADMIN), async (c) => {
@@ -144,7 +172,7 @@ api.post('/:id/technologies', roleMiddleware(Role.USER), async (c) => {
     return c.json({ error: 'Utilisateur non trouvé' }, 404);
   }
 
-  if (user.role !== Role.ADMIN && user._id.toString() !== loggedUser._id.toString()) {
+  if (loggedUser.role !== Role.ADMIN && user._id.toString() !== loggedUser._id.toString()) {
     return c.json({ error: "Vous n'avez pas les droits d'ajouter une technologie à cet utilisateur" }, 403);
   }
 

@@ -5,9 +5,13 @@ meta {
 }
 
 get {
-  url: {{base_url}}/technologies
+  url: {{base_url}}/technologies?search=java
   body: none
   auth: bearer
+}
+
+query {
+  search: java
 }
 
 auth:bearer {

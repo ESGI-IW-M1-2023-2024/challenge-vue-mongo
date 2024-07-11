@@ -5,9 +5,13 @@ meta {
 }
 
 get {
-  url: {{base_url}}/issues
+  url: {{base_url}}/issues?search=go
   body: none
   auth: bearer
+}
+
+query {
+  search: go
 }
 
 auth:bearer {
