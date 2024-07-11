@@ -3,18 +3,27 @@ const menuitems = [
   {
     title: 'Experts',
     path: '/experts',
+    role: '',
   },
   {
     title: 'Tarifs',
     path: '/pricing',
+    role: '',
   },
   {
     title: 'A propos',
     path: '/about',
+    role: '',
   },
   {
     title: 'Contacts',
     path: '/contact',
+    role: '',
+  },
+  {
+    title: 'Users',
+    path: '/admin/users',
+    role: 'admin',
   },
 ];
 
@@ -74,7 +83,7 @@ const logout = () => {
       <nav class="w-full lg:w-auto mt-2 lg:flex lg:mt-0" :class="{ block: open, hidden: !open }">
         <ul class="flex flex-col lg:flex-row lg:gap-3">
           <li v-for="item of menuitems">
-            <a :href="item.path" class="flex lg:px-3 py-2 text-gray-600 hover:text-gray-900">
+            <a v-if="item.role == '' || userStore.userRef?.role == 'admin' || userStore.userRef?.role == item.role" :href="item.path" class="flex lg:px-3 py-2 text-gray-600 hover:text-gray-900">
               {{ item.title }}
             </a>
           </li>
@@ -84,7 +93,10 @@ const logout = () => {
           <LandingLink href="/signup" size="md" block>S'inscrire</LandingLink>
         </div>
         <div v-else class="lg:hidden flex items-center mt-3 gap-4">
-          <p>Bienvenue {{ userStore.userRef?.firstName }} !</p>
+          <LandingLink href="/profil" styleName="muted" size="md" class="flex flex-col">
+            <p>Bienvenue {{ userStore.userRef?.firstName }} !</p>
+            <p class="text-sm text-gray-500">{{ userStore.userRef?.role }}</p>
+          </LandingLink>
           <a href="#" @click="logout()">Se déconnecter</a>
         </div>
       </nav>
@@ -94,7 +106,10 @@ const logout = () => {
           <LandingLink href="/signup" size="md">S'inscrire</LandingLink>
         </div>
         <div v-else class="hidden lg:flex items-center gap-4">
-          <p>Bienvenue {{ userStore.userRef?.firstName }} !</p>
+          <LandingLink href="/profil" styleName="muted" size="md" class="flex flex-col">
+            <p>Bienvenue {{ userStore.userRef?.firstName }} !</p>
+            <p class="text-sm text-gray-500">{{ userStore.userRef?.role }}</p>
+          </LandingLink>
           <a href="#" @click="logout()">Se déconnecter</a>
         </div>
       </div>
