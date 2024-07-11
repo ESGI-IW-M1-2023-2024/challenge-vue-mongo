@@ -11,6 +11,7 @@ const newUser = reactive({ firstName: '', lastName: '', email: '', role: '', pas
 const userDialog = ref(null);
 const newUserModal = ref(null);
 const errorMessage = ref('');
+const userStore = useUserStore();
 
 
 const openUserModal = (user) => {
@@ -37,14 +38,14 @@ const loadUserList = async () => {
     const response = await fetch('http://localhost:3000/api/users', {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${userStore.tokenRef}`,
         'Content-Type': 'application/json',
       },
     });
 
     if (response.ok) {
       const data = await response.json();
-      users.value = data;
+      users.value = data.results;
     } else {
       const data = await response.json();
       console.log(data.message);
@@ -59,7 +60,7 @@ const deleteUser = async (user) => {
     const response = await fetch('http://localhost:3000/api/users/' + user._id, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${userStore.tokenRef}`,
         'Content-Type': 'application/json',
       },
     });
@@ -74,7 +75,7 @@ const saveUser = async () => {
     const response = await fetch('http://localhost:3000/api/users/' + selectedUser._id, {
       method: 'PATCH',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${userStore.tokenRef}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(
@@ -115,7 +116,7 @@ const addUser = async () => {
     const response = await fetch('http://localhost:3000/api/users', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${userStore.tokenRef}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
