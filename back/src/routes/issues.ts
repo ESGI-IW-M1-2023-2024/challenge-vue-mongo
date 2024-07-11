@@ -9,11 +9,18 @@ const api = new Hono().basePath('/issues');
 api.get('/', roleMiddleware(Role.USER), async (c) => {
   const page = parseInt(c.req.query('page') || '1');
   const limit = parseInt(c.req.query('limit') || '10');
+  const search = c.req.query('search');
   const skip = (page - 1) * limit;
 
+  const filter: any = {};
+  if (search) {
+    const searchRegex = { $regex: search, $options: 'i' };
+    filter.$or = [{ title: searchRegex }, { status: searchRegex }, { 'technologies.label': searchRegex }];
+  }
+
   try {
-    const issue = await Issue.find().skip(skip).limit(limit);
-    const totalIssues = await Issue.countDocuments();
+    const issue = await Issue.find(filter).skip(skip).limit(limit);
+    const totalIssues = await Issue.countDocuments(filter);
     return c.json(
       {
         page,
