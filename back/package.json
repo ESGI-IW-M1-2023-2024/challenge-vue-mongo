@@ -2,7 +2,7 @@
   "name": "challenge-stack-2024-2",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts --watch"
   },
   "dependencies": {
     "@hono/node-server": "^1.12.0",
