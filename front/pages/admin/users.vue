@@ -154,12 +154,6 @@ onMounted(() => {
 })
 </script>
 
-<style>
-  dialog {
-    max-width: 500px;
-    margin: 10% auto;
-  }
-</style>
 <template>
   <div class="p-4">
     <div class="flex justify-between items-center p-2">
