@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{base_url}}/users/{{userId}}/likes/{{id}}
+  url: {{base_url}}/users/{{idUser}}/likes/{{idLike}}
   body: none
   auth: bearer
 }
@@ -15,6 +15,6 @@ auth:bearer {
 }
 
 vars:pre-request {
-  id: 668d7f732b59e2b192fbc4f9
-  userId: 668bbb2c63d3c7daafc0d5fds
+  idLike: 668d7f732b59e2b192fbc4f9
+  idUser: 668bbb2c63d3c7daafc0d5fd
 }

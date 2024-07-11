@@ -1,0 +1,25 @@
+meta {
+  name: create-user-like
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/users/{{idUser}}/likes
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "score": 1
+  }
+}
+
+vars:pre-request {
+  idUser: 668bbc388d553ffef66dd4a8
+}
