@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IUser } from '../../../back/src/models/user';
+import type { IUser } from '../../../../back/src/models/user';
 
 definePageMeta({
   layout: 'landing',
@@ -34,9 +34,17 @@ onMounted(async () => {
     console.error(error);
   }
 });
+
+const navigateToContact = () => {
+  navigateTo(window.location.href + '/contact');
+};
 </script>
 
 <template>
+  <!-- bouton retour en arrière -->
+  <v-btn icon @click="navigateTo('/experts')" class="m-5 -mb-5">
+    <v-icon>mdi-arrow-left</v-icon>
+  </v-btn>
   <v-container v-if="!loading">
     <LandingContainer>
       <LandingSectionhead>
@@ -63,6 +71,9 @@ onMounted(async () => {
             </v-card>
           </v-col>
         </v-row>
+      </v-container>
+      <v-container>
+        <v-btn color="primary" :to="'/experts/' + user?._id + '/contact'" class="mx-auto">Entrer en contact</v-btn>
       </v-container>
     </LandingContainer>
   </v-container>

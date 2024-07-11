@@ -65,7 +65,7 @@ const calculateColWidth = (userCount: number) => {
     <v-text-field append-inner-icon="mdi-magnify" density="compact" label="Rechercher par techno" variant="solo" hide-details single-line class="mx-auto mt-5"></v-text-field>
 
     <v-container v-if="!loading">
-      <v-row>
+      <v-row class="items-stretch">
         <v-col :cols="calculateColWidth(users.length)" v-for="user of users" :key="user._id.toString">
           <Card class="group" :image="user?.imageUrl" :title="user?.firstName + ' ' + user.lastName" :to="'/experts/' + user?._id" :reviews="user?.likes">
             <v-container>

@@ -2,10 +2,10 @@ import { model, Schema, Types } from 'mongoose';
 import { User } from './user';
 
 interface ITechnology {
-  _id: Types.ObjectId;
+  _id: Types.ObjectId | string;
   label: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const technologySchema = new Schema<ITechnology>(
