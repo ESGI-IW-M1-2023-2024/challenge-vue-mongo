@@ -1,0 +1,39 @@
+meta {
+  name: post-issue
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/issues
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "idUser": "668bbc5b4b11f91607d1c66c",
+    "idMentor": "668bbb2c63d3c7daafc0d5fd",
+    "technologies": [
+      {
+        "_id": "668d03ea25a23eac87e4cc26",
+        "label": "Javascript"
+      },
+      {
+        "_id": "668d047d25a23eac87e4cc28",
+        "label": "Typescript"
+      }
+    ],
+    "messages": [
+      {
+        "_id": "668d20d542785c16e67d05b2",
+        "title": "Bonjour, j'aimerai de l'aide",
+        "content": "édition du message"
+      }
+    ]
+  }
+}

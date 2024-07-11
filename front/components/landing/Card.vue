@@ -7,9 +7,10 @@ interface Props {
   image: string;
   title: string;
   subtitle: string;
+  reviews: [];
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   styleName: "primary",
   image: "",
 });
@@ -20,6 +21,23 @@ const styles = {
   primary:
     "bg-primary text-white hover:bg-slate-900  border-2 border-transparent",
 };
+
+const goodReviewsPercentage = ref(0);
+
+
+const calculateScore = () => {
+  let reviewsScore = 0;
+  for (const element of props.reviews) {
+    if (element.score > 0) {
+      reviewsScore++;
+    }
+  }
+  const totalReviews = props.reviews.length;
+  if (totalReviews > 0) {
+    goodReviewsPercentage.value = (reviewsScore / totalReviews) * 100; // Calculer le pourcentage
+  }
+};
+calculateScore();
 </script>
 
 <template>
@@ -43,7 +61,7 @@ const styles = {
     
       <v-card-title>{{ title }}</v-card-title>
     </v-img>
-    <div class="absolute right-0 mr-2 -translate-y-1/2 bg-white px-2 rounded-full">reviews</div>
+    <div class="absolute right-0 mr-2 -translate-y-1/2 bg-white px-2 rounded-full">{{goodReviewsPercentage}}</div>
     <v-card-subtitle class="pt-4">
       {{ subtitle }}
     </v-card-subtitle>

@@ -2,6 +2,9 @@ import { Hono } from 'hono';
 import { User } from '../models/user';
 import { myEnv } from '../../conf';
 import jwt from 'jsonwebtoken';
+import roleMiddleware from '../middleware/role-middleware';
+import { Role } from '../models/user';
+
 
 const api = new Hono().basePath('');
 
@@ -34,6 +37,10 @@ api.post('/login', async (c) => {
   } catch (err: any) {
     return c.json({ message: 'Error logging in', error: err.message }, 400);
   }
+});
+
+api.get('/checkLogin', roleMiddleware(Role.USER), async (c) => {
+  return c.json({ message: 'User is logged in' });
 });
 
 export default api;

@@ -7,8 +7,26 @@ import { Role } from '../models/user';
 const api = new Hono().basePath('/technologies');
 
 api.get('/', roleMiddleware(Role.USER), async (c) => {
-  const technologies = await Technology.find();
-  return c.json(technologies, 200);
+  const page = parseInt(c.req.query('page') || '1');
+  const limit = parseInt(c.req.query('limit') || '10');
+  const skip = (page - 1) * limit;
+
+  try {
+    const technologies = await Technology.find().skip(skip).limit(limit);
+    const totalTechnologies = await Technology.countDocuments();
+    return c.json(
+      {
+        page,
+        limit,
+        totalPages: Math.ceil(totalTechnologies / limit),
+        totalResults: totalTechnologies,
+        results: technologies,
+      },
+      200,
+    );
+  } catch {
+    return c.json({ msg: 'Erreur lors de la récupération des technologies' }, 500);
+  }
 });
 
 api.get('/:id', roleMiddleware(Role.USER), async (c) => {

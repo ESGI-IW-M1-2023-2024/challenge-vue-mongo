@@ -1,52 +1,44 @@
 <script setup>
 const features = [
   {
-    title: "Bring Your Own Framework",
-    description:
-      "Build your site using Vue, web components, or just plain ol' HTML + JavaScript.",
-    icon: "bx:bxs-briefcase",
+    title: 'Choisissez Votre Expert',
+    description: 'Trouvez et sélectionnez les experts dans les technologies et langages spécifiques dont vous avez besoin.',
+    icon: 'bx:bxs-briefcase',
   },
   {
-    title: "100% Static HTML, No JS",
-    description:
-      "Nuxt renders your entire page to static HTML, removing all JavaScript from your final build by default.",
-    icon: "bx:bxs-window-alt",
+    title: 'Réputation et Fiabilité',
+    description: 'Les experts sont évalués par la communauté pour garantir des conseils et une aide de qualité.',
+    icon: 'bx:bxs-window-alt',
   },
   {
-    title: "On-Demand Components",
-    description:
-      "Need some JS? Nuxt can automatically hydrate interactive components when they become visible on the page.  ",
-    icon: "bx:bxs-data",
+    title: 'Sessions Personnalisées',
+    description: "Réservez des sessions one-to-one avec partage d'écran pour une aide personnalisée et en temps réel.",
+    icon: 'bx:bxs-data',
   },
   {
-    title: "Broad Integration",
-    description:
-      "Nuxt supports TypeScript, Scoped CSS, CSS Modules, Sass, Tailwind, Markdown, MDX, and any other npm packages.",
-    icon: "bx:bxs-bot",
+    title: 'Intégration Complète',
+    description: 'AirMentor se connecte avec GitHub et StackOverflow pour une meilleure reconnaissance des contributions et compétences.',
+    icon: 'bx:bxs-bot',
   },
   {
-    title: "SEO Enabled",
-    description:
-      "Automatic sitemaps, RSS feeds, pagination and collections take the pain out of SEO and syndication. It just works!",
-    icon: "bx:bxs-file-find",
+    title: 'Suivi et Historique',
+    description: 'Accédez aux commentaires et historiques des interventions pour apprendre des expériences passées.',
+    icon: 'bx:bxs-file-find',
   },
   {
-    title: "Community",
-    description:
-      "Nuxt is an open source project powered by hundreds of contributors making thousands of individual contributions.",
-    icon: "bx:bxs-user",
+    title: 'Communauté Active',
+    description: 'Rejoignez une communauté de passionnés, échangez et progressez ensemble dans vos projets.',
+    icon: 'bx:bxs-user',
   },
 ];
 </script>
 
 <template>
   <div class="mt-16 md:mt-0">
-    <h2 class="text-4xl lg:text-5xl font-bold lg:tracking-tight">
-      Everything you need to start a website
-    </h2>
+    <h2 class="text-4xl lg:text-5xl font-bold lg:tracking-tight">Trouvez un Expert</h2>
     <p class="text-lg mt-4 text-slate-600">
-      Nuxt comes batteries included. It takes the best parts of state-of-the-art
-      tools and adds its own innovations.
+      Grâce à notre système de réputation, vous pouvez facilement identifier les spécialistes les plus compétents dans les langages et technologies que vous utilisez. Nos experts sont évalués par la communauté pour garantir un niveau de service
+      exceptionnel.
     </p>
   </div>
 

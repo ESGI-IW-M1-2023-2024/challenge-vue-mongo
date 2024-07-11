@@ -1,0 +1,25 @@
+meta {
+  name: create-technology-from-user
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{base_url}}/users/{{id}}/technologies
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "idTechnology": "668d03dc25a23eac87e4cc24"
+  }
+}
+
+vars:pre-request {
+  id: 668bbb2c63d3c7daafc0d5fd
+}

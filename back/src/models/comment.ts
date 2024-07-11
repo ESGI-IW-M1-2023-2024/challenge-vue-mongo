@@ -1,6 +1,8 @@
 import { model, Schema, SchemaTypes, Types } from 'mongoose';
+import { User } from './user';
 
 interface IComment {
+  _id: Types.ObjectId;
   idUser: Types.ObjectId;
   idMentor: Types.ObjectId;
   content: string;
@@ -16,6 +18,16 @@ const commentSchema = new Schema<IComment>(
   },
   { timestamps: true },
 );
+
+commentSchema.pre('deleteOne', async function (next) {
+  const comment: IComment | null = await this.model.findOne(this.getFilter());
+
+  if (comment) {
+    await User.updateOne({ _id: comment.idMentor }, { $pull: { comments: comment._id } });
+  }
+
+  next();
+});
 
 const Comment = model<IComment>('comments', commentSchema);
 export { Comment, IComment };
