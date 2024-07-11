@@ -21,9 +21,9 @@ onMounted(async () => {
 
 
 
-  // if (!userStore.token) {
-  //   router.push('/login');
-  // }
+  if (!userStore.token) {
+    router.push('/login');
+  }
 
   try {
     const response = await fetch('http://localhost:3000/api/users', {

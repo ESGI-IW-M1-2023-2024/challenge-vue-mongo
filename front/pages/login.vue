@@ -33,7 +33,7 @@ const handleSubmit = async () => {
       userStore.setToken(token);
       userStore.setUser(data.id);
       console.log('token', userStore.tokenRef);
-      // router.back();
+      router.back();
     } else {
       const data = await response.json();
       errorMessage.value = data.message;
