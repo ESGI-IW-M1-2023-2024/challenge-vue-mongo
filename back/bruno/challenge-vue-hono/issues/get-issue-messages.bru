@@ -1,0 +1,19 @@
+meta {
+  name: get-issue-messages
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base_url}}/issues/{{idIssue}}/messages
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+vars:pre-request {
+  idIssue: 668bbb2c63d3c7daafc0d5fd
+}

@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 import { Message } from '../models/message';
-import { jsxAttr } from 'hono/jsx/jsx-runtime';
 import roleMiddleware from '../middleware/role-middleware';
 import { Role } from '../models/user';
 

@@ -3,6 +3,7 @@ import { Role } from '../models/user';
 import { Issue } from '../models/issue';
 import { isValidObjectId } from 'mongoose';
 import roleMiddleware from '../middleware/role-middleware';
+import { Message } from '../models/message';
 
 const api = new Hono().basePath('/issues');
 
@@ -104,6 +105,13 @@ api.delete('/:id', roleMiddleware(Role.USER), async (c) => {
   }
 
   return c.json({ msg: 'Sujet non trouvé' }, 404);
+});
+
+api.get('/:id/messages', roleMiddleware(Role.USER), async (c) => {
+  const idIssue = c.req.param('id');
+
+  const messages = await Message.find({ idIssue: idIssue });
+  return c.json(messages, 200);
 });
 
 export default api;
