@@ -15,7 +15,6 @@ const totalPages = computed(() => Math.ceil(totalUsers.value / usersPerPage));
 const router = useRouter();
 const userStore = useUserStore();
 const { tokenRef } = storeToRefs(userStore);
-console.log('token', tokenRef);
 
 onMounted(async () => {
   if (!userStore.tokenRef) {
@@ -34,7 +33,7 @@ onMounted(async () => {
     if (response.ok) {
       const data = await response.json();
       console.log(data);
-      users.value = data;
+      users.value = data.results;
       loading.value = false;
       console.log(users.value);
       totalUsers.value = data.length;
@@ -78,6 +77,13 @@ onMounted(async () => {
               </v-row>
             </v-container>
           </Card>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container v-else>
+      <v-row>
+        <v-col cols="12">
+          <v-progress-linear indeterminate color="primary"></v-progress-linear>
         </v-col>
       </v-row>
     </v-container>
