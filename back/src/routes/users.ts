@@ -201,6 +201,28 @@ api.post('/:id/technologies', roleMiddleware(Role.USER), async (c) => {
   return c.json(user, 200);
 });
 
+api.delete('/:idUser/technologies/:idTechnology', roleMiddleware(Role.USER), async (c) => {
+  const idUser = c.req.param('idUser');
+  if (!isValidObjectId(idUser)) {
+    return c.json({ msg: 'ObjectId mal formaté' }, 400);
+  }
+
+  const user = await User.findById(idUser);
+  const loggedUser = c.get('user');
+  if (!user) {
+    return c.json({ error: 'Utilisateur non trouvé' }, 404);
+  }
+
+  if (loggedUser.role !== Role.ADMIN && user._id.toString() !== loggedUser._id.toString()) {
+    return c.json({ error: "Vous n'avez pas les droits de supprimer une technologie à cet utilisateur" }, 403);
+  }
+
+  const idTechnology = c.req.param('idTechnology');
+  user.technologies = user.technologies?.filter((technology) => technology._id.toString() !== idTechnology);
+  await user.save();
+  return c.json({ msg: `Technologie avec l'id ${idTechnology} supprimée avec succès de l'utilisateur ${idUser}` });
+});
+
 api.get('/:id/comments', roleMiddleware(Role.USER), async (c) => {
   const idUser = c.req.param('id');
   const page = parseInt(c.req.query('page') || '1');

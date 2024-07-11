@@ -1,7 +1,8 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 import { User } from './user';
 
 interface ITechnology {
+  _id: Types.ObjectId;
   label: string;
   createdAt: Date;
   updatedAt: Date;
