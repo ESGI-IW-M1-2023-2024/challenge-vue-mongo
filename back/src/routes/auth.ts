@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken';
 import roleMiddleware from '../middleware/role-middleware';
 import { Role } from '../models/user';
 
-
 const api = new Hono().basePath('');
 
 // api.post('/register', async (c) => {
@@ -35,11 +34,13 @@ api.post('/login', async (c) => {
 
     return c.json({
       token,
-      id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      role: user.role,
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+      },
     });
   } catch (err: any) {
     return c.json({ message: 'Error logging in', error: err.message }, 400);
