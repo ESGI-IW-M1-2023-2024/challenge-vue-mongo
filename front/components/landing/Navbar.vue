@@ -16,6 +16,10 @@ const menuitems = [
     title: 'Contacts',
     path: '/contact',
   },
+  {
+    title: 'Users',
+    path: '/admin/users',
+  },
 ];
 
 const open = ref(false);
