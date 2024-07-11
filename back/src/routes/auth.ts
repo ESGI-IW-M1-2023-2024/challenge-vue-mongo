@@ -30,7 +30,7 @@ api.post('/login', async (c) => {
     if (!isMatch) return c.json({ message: 'Invalid credentials' }, 400);
 
     const payload = { user: { id: user.id } };
-    const token = jwt.sign(payload, myEnv.secretKey, { expiresIn: '1h' });
+    const token = jwt.sign(payload, myEnv.secretKey, { expiresIn: '4h' });
 
     return c.json({
       token,
