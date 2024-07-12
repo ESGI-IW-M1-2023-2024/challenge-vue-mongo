@@ -74,7 +74,7 @@ api.get('/mentors', roleMiddleware(Role.USER), async (c) => {
   }
 });
 
-api.get('/issues', roleMiddleware(Role.ADMIN), async (c) => {
+api.get('/issues', roleMiddleware(Role.USER), async (c) => {
   const loggedUser = c.get('user');
   const issues = await Issue.find({ idUser: loggedUser._id });
   return c.json(issues, 200);
