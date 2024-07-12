@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
+import { useToast } from 'vue-toastification';
 
 definePageMeta({
   layout: "landing",
@@ -13,6 +14,7 @@ const newTechnoModal = ref(null);
 const errorMessage = ref('');
 const userStore = useUserStore();
 const searchQuery = ref('');
+const toast = useToast();
 
 
 const openTechnoModal = (techno) => {
@@ -48,9 +50,11 @@ const loadTechnoList = async () => {
       technologies.value = data.results;
     } else {
       const data = await response.json();
+      toast.error('Erreur lors du chargement de la liste des technologies');
       console.log(data.message);
     }
   } catch (error) {
+    toast.error('Erreur lors du chargement de la liste des technologies');
     console.error(error);
   }
 }
@@ -65,8 +69,10 @@ const deleteTechno = async (user) => {
       },
     });
     loadTechnoList();
+    toast.success('Technologie supprimée avec succès');
   } catch (error) {
-    console.error('Error deleting user:', error);
+    toast.error('Erreur lors de la suppression de la technologie');
+    console.error('Error deleting technologie:', error);
   }
 };
 
@@ -87,13 +93,16 @@ const saveTechno = async () => {
 
     if (response.ok) {
       loadTechnoList();
+      toast.success('Technologie modifiée avec succès');
       technoDialog.value.close();
     } else {
       const data = await response.json();
+      toast.error('Erreur lors de la modification de la technologie');
       errorMessage.value = data.message;
     }
   } catch (error) {
     console.error(error);
+    toast.error('Erreur lors de la modification de la technologie');
     errorMessage.value = 'Error saving technology: ', error;
   }
 };
@@ -113,13 +122,16 @@ const addTechno = async () => {
 
     if (response.ok) {
       loadTechnoList();
+      toast.success('Technologie créée avec succès');
       newTechnoModal.value.close();
     } else {
       const data = await response.json();
+      toast.error('Erreur lors de la création de la technologie');
       errorMessage.value = data.message;
     }
   } catch (error) {
     console.error(error);
+    toast.error('Erreur lors de la création de la technologie');
     errorMessage.value = 'Error creating technology: ', error;
   }
 };

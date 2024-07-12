@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
+import { useToast } from 'vue-toastification';
 
 definePageMeta({
   layout: "landing",
@@ -13,7 +14,7 @@ const newUserModal = ref(null);
 const errorMessage = ref('');
 const userStore = useUserStore();
 const searchQuery = ref('');
-
+const toast = useToast();
 
 const openUserModal = (user) => {
   Object.assign(selectedUser, user);
@@ -49,9 +50,11 @@ const loadUserList = async () => {
       users.value = data.results;
     } else {
       const data = await response.json();
+      toast.error('Erreur lors du chargement de la liste des utilisateurs');
       console.log(data.message);
     }
   } catch (error) {
+    toast.error('Erreur lors du chargement de la liste des utilisateurs');
     console.error(error);
   }
 }
@@ -66,7 +69,9 @@ const deleteUser = async (user) => {
       },
     });
     loadUserList();
+    toast.success('Utilisateur supprimé avec succès');
   } catch (error) {
+    toast.error('Erreur lors de la suppression de l\'utilisateur');
     console.error('Error deleting user:', error);
   }
 };
@@ -106,12 +111,15 @@ const saveUser = async () => {
     if (response.ok) {
       loadUserList();
       userDialog.value.close();
+      toast.success('Utilisateur modifié avec succès');
     } else {
       const data = await response.json();
+      toast.error('Erreur lors de la modification de l\'utilisateur');
       errorMessage.value = data.message;
     }
   } catch (error) {
     console.error(error);
+    toast.error('Erreur lors de la modification de l\'utilisateur');
     errorMessage.value = 'Error saving user: ', error;
   }
 };
@@ -139,12 +147,15 @@ const addUser = async () => {
     if (response.ok) {
       loadUserList();
       newUserModal.value.close();
+      toast.success('Utilisateur crée avec succès');
     } else {
       const data = await response.json();
+      toast.error('Erreur lors de la création de l\'utilisateur');
       errorMessage.value = data.message;
     }
   } catch (error) {
     console.error(error);
+    toast.error('Erreur lors de la création de l\'utilisateur');
     errorMessage.value = 'Error registering user: ', error;
   }
 };
