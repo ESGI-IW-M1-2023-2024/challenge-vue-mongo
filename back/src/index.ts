@@ -12,6 +12,7 @@ import message from './routes/messages';
 import comments from './routes/comments';
 import issues from './routes/issues';
 import { WebSocketServer } from 'ws';
+import { Message } from './models/message';
 
 const app = new Hono();
 const port = myEnv.port;
@@ -45,9 +46,16 @@ const wss = new WebSocketServer({ server });
 wss.on('connection', function connection(ws) {
   ws.on('error', console.error);
   ws.on('message', async function message(data) {
+    const messageReceived = JSON.parse(data.toString());
+    const message = new Message(messageReceived);
+    await message.save();
+
     console.log(data);
-    if (ws.readyState === ws.OPEN) {
-      ws.send(data);
-    }
+    wss.clients.forEach(function each(client) {
+      if (client.readyState === client.OPEN) {
+        client.send(data);
+        console.info('Message sent');
+      }
+    });
   });
 });
