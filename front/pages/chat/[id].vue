@@ -184,7 +184,7 @@ onMounted(async () => {
         <form @submit.prevent="sendMessage" class="flex items-center">
           <input v-model="newMessage" class="w-full border rounded-full py-2 px-4 mr-2" type="text" placeholder="Type your message...">
           <button class="bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-full" type="submit">
-            Send
+            Envoyer
           </button>
         </form>
       </div>
