@@ -84,7 +84,11 @@ api.get('/:id', roleMiddleware(Role.USER), async (c) => {
       return c.json({ msg: 'Utilisateur non trouvé' }, 404);
     }
 
-    if (loggedUser.role !== Role.ADMIN && oneUser._id.toString() !== loggedUser._id.toString()) {
+    if (
+      loggedUser.role !== Role.ADMIN &&
+      oneUser._id.toString() !== loggedUser._id.toString() &&
+      oneUser.role !== Role.MENTOR
+    ) {
       return c.json({ error: "Vous n'avez pas les droits de voir cet utilisateur" }, 403);
     }
 
