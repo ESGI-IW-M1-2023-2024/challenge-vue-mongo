@@ -15,6 +15,8 @@ const errorMessage = ref('');
 const userStore = useUserStore();
 const searchQuery = ref('');
 const toast = useToast();
+const currentPage = ref(1);
+const totalPages = ref(1);
 
 const openUserModal = (user) => {
   Object.assign(selectedUser, user);
@@ -35,9 +37,9 @@ const closeNewUserModal = () => {
   newUserModal.value.close();
 };
 
-const loadUserList = async () => {
+const loadUserList = async (page = 1) => {
   try {
-    const response = await fetch('http://localhost:3000/api/users?search=' + searchQuery.value, {
+    const response = await fetch(`http://localhost:3000/api/users?page=${page}?search=${searchQuery.value}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${userStore.tokenRef}`,
@@ -48,6 +50,8 @@ const loadUserList = async () => {
     if (response.ok) {
       const data = await response.json();
       users.value = data.results;
+      currentPage.value = data.page;
+      totalPages.value = data.totalPages;
     } else {
       const data = await response.json();
       toast.error('Erreur lors du chargement de la liste des utilisateurs');
@@ -189,6 +193,13 @@ onMounted(() => {
         </div>
       </li>
     </ul>
+    <v-pagination 
+        :length="totalPages" 
+        class="my-10" 
+        v-model="currentPage" 
+        @update:model-value="loadUserList"
+      >
+      </v-pagination>
 
     <dialog ref="userDialog" class="p-6 border rounded-md bg-white w-100">
       <form method="dialog" @submit.prevent="saveUser" class="space-y-4">

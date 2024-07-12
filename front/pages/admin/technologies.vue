@@ -15,6 +15,8 @@ const errorMessage = ref('');
 const userStore = useUserStore();
 const searchQuery = ref('');
 const toast = useToast();
+const currentPage = ref(1);
+const totalPages = ref(1);
 
 
 const openTechnoModal = (techno) => {
@@ -35,9 +37,9 @@ const closeNewTechnoModal = () => {
   newTechnoModal.value.close();
 };
 
-const loadTechnoList = async () => {
+const loadTechnoList = async (page = 1) => {
   try {
-    const response = await fetch('http://localhost:3000/api/technologies?search=' + searchQuery.value, {
+    const response = await fetch(`http://localhost:3000/api/technologies?page=${page}?search=${searchQuery.value}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${userStore.tokenRef}`,
@@ -48,6 +50,8 @@ const loadTechnoList = async () => {
     if (response.ok) {
       const data = await response.json();
       technologies.value = data.results;
+      currentPage.value = data.page;
+      totalPages.value = data.totalPages;
     } else {
       const data = await response.json();
       toast.error('Erreur lors du chargement de la liste des technologies');
@@ -167,6 +171,13 @@ onMounted(() => {
         </div>
       </li>
     </ul>
+    <v-pagination 
+      :length="totalPages" 
+      class="my-10" 
+      v-model="currentPage" 
+      @update:model-value="loadTechnoList"
+    >
+    </v-pagination>
 
     <dialog ref="technoDialog" class="p-6 border rounded-md bg-white w-100">
       <form method="dialog" @submit.prevent="saveTechno" class="space-y-4">
