@@ -14,23 +14,31 @@ api.get('/', roleMiddleware(Role.USER), async (c: Context<{}, '/technologies/', 
   const skip = (page - 1) * limit;
   const filter = { label: { $regex: search, $options: 'i' } };
 
-  try {
-    const technologies = await Technology.find(filter)
-      .skip(skip)
-      .limit(pagination ? limit : 1000000);
-    const totalTechnologies = await Technology.countDocuments(filter);
-    return c.json(
-      {
-        page,
-        limit,
-        totalPages: Math.ceil(totalTechnologies / limit),
-        totalResults: totalTechnologies,
-        results: technologies,
-      },
-      200,
-    );
-  } catch {
-    return c.json({ msg: 'Erreur lors de la récupération des technologies' }, 500);
+  if (pagination) {
+    try {
+      const technologies = await Technology.find(filter).skip(skip).limit(limit);
+      const totalTechnologies = await Technology.countDocuments(filter);
+      return c.json(
+        {
+          page,
+          limit,
+          totalPages: Math.ceil(totalTechnologies / limit),
+          totalResults: totalTechnologies,
+          results: technologies,
+        },
+        200,
+      );
+    } catch {
+      return c.json({ msg: 'Erreur lors de la récupération des technologies' }, 500);
+    }
+  } else {
+    try {
+      const technologies = await Technology.find(filter);
+      const totalTechnologies = await Technology.countDocuments(filter);
+      return c.json(technologies, 200);
+    } catch {
+      return c.json({ msg: 'Erreur lors de la récupération des technologies' }, 500);
+    }
   }
 });
 
