@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Context, Hono } from 'hono';
 import { Technology } from '../models/technology';
 import { isValidObjectId } from 'mongoose';
 import roleMiddleware from '../middleware/role-middleware';
@@ -6,15 +6,18 @@ import { Role } from '../models/user';
 
 const api = new Hono().basePath('/technologies');
 
-api.get('/', roleMiddleware(Role.USER), async (c) => {
+api.get('/', roleMiddleware(Role.USER), async (c: Context<{}, '/technologies/', {}>) => {
   const page = parseInt(c.req.query('page') || '1');
   const limit = parseInt(c.req.query('limit') || '10');
+  const pagination = c.req.query('pagination') !== 'false';
   const search = c.req.query('search') || '';
   const skip = (page - 1) * limit;
   const filter = { label: { $regex: search, $options: 'i' } };
 
   try {
-    const technologies = await Technology.find(filter).skip(skip).limit(limit);
+    const technologies = await Technology.find(filter)
+      .skip(skip)
+      .limit(pagination ? limit : 1000000);
     const totalTechnologies = await Technology.countDocuments(filter);
     return c.json(
       {
