@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { IUser, Role, User } from '../models/user';
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, Types } from 'mongoose';
 import roleMiddleware from '../middleware/role-middleware';
 import { Technology } from '../models/technology';
 import { Comment } from '../models/comment';
@@ -172,7 +172,8 @@ api.delete('/:id', roleMiddleware(Role.ADMIN), async (c) => {
 
 api.post('/:id/technologies', roleMiddleware(Role.USER), async (c) => {
   const _id = c.req.param('id');
-  const { idTechnology } = await c.req.json();
+  const { technologyIds }: { technologyIds: string[] } = await c.req.json();
+  const objectIds = technologyIds.map((id) => new Types.ObjectId(id));
 
   if (!isValidObjectId(_id)) {
     return c.json({ msg: 'ObjectId mal formaté' }, 400);
@@ -185,24 +186,25 @@ api.post('/:id/technologies', roleMiddleware(Role.USER), async (c) => {
   }
 
   if (loggedUser.role !== Role.ADMIN && user._id.toString() !== loggedUser._id.toString()) {
-    return c.json({ error: "Vous n'avez pas les droits d'ajouter une technologie à cet utilisateur" }, 403);
+    return c.json({ error: "Vous n'avez pas les droits d'ajouter des technologies à cet utilisateur" }, 403);
   }
 
-  const technology = await Technology.findOne({ _id: idTechnology });
-  if (!technology) {
-    return c.json({ error: 'Technologie non trouvée' }, 404);
+  const technologies = await Technology.find({ _id: { $in: objectIds } });
+  if (technologies.length === 0) {
+    return c.json({ error: 'Aucune technologies trouvées' }, 404);
   }
 
-  if (
-    user.technologies?.some(
-      (userTechnology) => technology.label.toString().toLowerCase() === userTechnology.label.toString().toLowerCase(),
-    )
-  ) {
-    return c.json({ error: "L'utilisateur possède déjà cette technologie" }, 400);
-  }
-
-  user.technologies?.push(technology);
-  await user.save();
+  technologies.forEach(async (dbTechnology) => {
+    if (
+      user.technologies?.some(
+        (userTechnology) =>
+          dbTechnology.label.toString().toLowerCase() !== userTechnology.label.toString().toLowerCase(),
+      )
+    ) {
+      user.technologies?.push(dbTechnology);
+      await user.save();
+    }
+  });
   return c.json(user, 200);
 });
 
