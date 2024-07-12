@@ -83,33 +83,33 @@ onMounted(async () => {
 })
 
 const saveTechno = async () => {
-  try {
-    const response = await fetch(`http://localhost:3000/api/users/${userStore.userRef?.id}/technologies`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${userStore.tokenRef}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(
-        {
-          technologyIds: selectedTechno.value,
-        }
-      ),
-    });
+  // try {
+  //   const response = await fetch(`http://localhost:3000/api/users/${userStore.userRef?.id}/technologies`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Authorization': `Bearer ${userStore.tokenRef}`,
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(
+  //       {
+  //         technologyIds: selectedTechno.value,
+  //       }
+  //     ),
+  //   });
 
-    if (response.ok) {
-      const data = await response.json();
-      toast.success('Enregistrement réussi');
-    } else {
-      const data = await response.json();
-      toast.error('Erreur lors de l\'enregistrement');
-      errorMessage.value = data.message;
-    }
-  } catch (error) {
-    console.error(error);
-    toast.error('Erreur lors de l\'enregistrement');
-    errorMessage.value = 'An error occurred. Please try again later.';
-  }
+  //   if (response.ok) {
+  //     const data = await response.json();
+  //     toast.success('Enregistrement réussi');
+  //   } else {
+  //     const data = await response.json();
+  //     toast.error('Erreur lors de l\'enregistrement');
+  //     errorMessage.value = data.message;
+  //   }
+  // } catch (error) {
+  //   console.error(error);
+  //   toast.error('Erreur lors de l\'enregistrement');
+  //   errorMessage.value = 'An error occurred. Please try again later.';
+  // }
 };
 
 const handleSubmit = async () => {
@@ -142,7 +142,7 @@ const handleSubmit = async () => {
 
     if (response.ok) {
       const data = await response.json();
-      await saveTechno();
+      // await saveTechno();
     } else {
       const data = await response.json();
       toast.error('Erreur lors de l\'enregistrement');
