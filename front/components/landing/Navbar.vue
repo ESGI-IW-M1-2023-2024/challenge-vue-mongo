@@ -31,6 +31,11 @@ const menuitems = [
     path: '/admin/technologies',
     role: 'admin',
   },
+  {
+    title: 'Mes Tickets',
+    path: '/my-tickets',
+    role: '',
+  },
 ];
 
 const open = ref(false);
@@ -97,11 +102,13 @@ const logout = () => {
       </div>
       <nav class="w-full lg:w-auto mt-2 lg:flex lg:mt-0" :class="{ block: open, hidden: !open }">
         <ul class="flex flex-col lg:flex-row lg:gap-3">
-          <li v-for="item of menuitems">
-            <a v-if="item.role == '' || userStore.userRef?.role == 'admin' || userStore.userRef?.role == item.role" :href="item.path" class="flex lg:px-3 py-2 text-gray-600 hover:text-gray-900">
-              {{ item.title }}
-            </a>
-          </li>
+          <template v-for="item of menuitems">
+            <li v-if="item.role == '' || userStore.userRef?.role == 'admin' || userStore.userRef?.role == item.role">
+              <a :href="item.path" class="flex lg:px-3 py-2 text-gray-600 hover:text-gray-900">
+                {{ item.title }}
+              </a>
+            </li>
+          </template>
         </ul>
         <div v-if="!isLogged" class="lg:hidden flex items-center mt-3 gap-4">
           <LandingLink href="/login" styleName="muted" block size="md">Se connecter</LandingLink>
