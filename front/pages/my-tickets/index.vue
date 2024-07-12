@@ -81,7 +81,8 @@ onMounted(async () => {
       <v-container v-if="!loading">
         <v-row class="items-stretch">
           <v-col cols="4" v-for="issue of issues" :key="issue._id.toString()">
-            <v-card class="px-3 py-2 h-full">
+            <v-card class="px-3 py-2 h-full" link
+            :to="'/chat/'+issue._id">
               {{ issue.mentor ? issue.mentor.firstName + ' ' + issue.mentor.lastName : 'Chargement...' }}
               <v-card-title>{{ issue.title }}</v-card-title>
               <v-card-text>{{ issue.description }}</v-card-text>
