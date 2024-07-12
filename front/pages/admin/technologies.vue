@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
+import { useToast } from 'vue-toastification';
 
 definePageMeta({
   layout: "landing",
@@ -13,6 +14,9 @@ const newTechnoModal = ref(null);
 const errorMessage = ref('');
 const userStore = useUserStore();
 const searchQuery = ref('');
+const toast = useToast();
+const currentPage = ref(1);
+const totalPages = ref(1);
 
 
 const openTechnoModal = (techno) => {
@@ -33,9 +37,9 @@ const closeNewTechnoModal = () => {
   newTechnoModal.value.close();
 };
 
-const loadTechnoList = async () => {
+const loadTechnoList = async (page = 1) => {
   try {
-    const response = await fetch('http://localhost:3000/api/technologies?search=' + searchQuery.value, {
+    const response = await fetch(`http://localhost:3000/api/technologies?page=${page}?search=${searchQuery.value}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${userStore.tokenRef}`,
@@ -46,11 +50,15 @@ const loadTechnoList = async () => {
     if (response.ok) {
       const data = await response.json();
       technologies.value = data.results;
+      currentPage.value = data.page;
+      totalPages.value = data.totalPages;
     } else {
       const data = await response.json();
+      toast.error('Erreur lors du chargement de la liste des technologies');
       console.log(data.message);
     }
   } catch (error) {
+    toast.error('Erreur lors du chargement de la liste des technologies');
     console.error(error);
   }
 }
@@ -65,8 +73,10 @@ const deleteTechno = async (user) => {
       },
     });
     loadTechnoList();
+    toast.success('Technologie supprimée avec succès');
   } catch (error) {
-    console.error('Error deleting user:', error);
+    toast.error('Erreur lors de la suppression de la technologie');
+    console.error('Error deleting technologie:', error);
   }
 };
 
@@ -87,13 +97,16 @@ const saveTechno = async () => {
 
     if (response.ok) {
       loadTechnoList();
+      toast.success('Technologie modifiée avec succès');
       technoDialog.value.close();
     } else {
       const data = await response.json();
+      toast.error('Erreur lors de la modification de la technologie');
       errorMessage.value = data.message;
     }
   } catch (error) {
     console.error(error);
+    toast.error('Erreur lors de la modification de la technologie');
     errorMessage.value = 'Error saving technology: ', error;
   }
 };
@@ -113,13 +126,16 @@ const addTechno = async () => {
 
     if (response.ok) {
       loadTechnoList();
+      toast.success('Technologie créée avec succès');
       newTechnoModal.value.close();
     } else {
       const data = await response.json();
+      toast.error('Erreur lors de la création de la technologie');
       errorMessage.value = data.message;
     }
   } catch (error) {
     console.error(error);
+    toast.error('Erreur lors de la création de la technologie');
     errorMessage.value = 'Error creating technology: ', error;
   }
 };
@@ -155,6 +171,13 @@ onMounted(() => {
         </div>
       </li>
     </ul>
+    <v-pagination 
+      :length="totalPages" 
+      class="my-10" 
+      v-model="currentPage" 
+      @update:model-value="loadTechnoList"
+    >
+    </v-pagination>
 
     <dialog ref="technoDialog" class="p-6 border rounded-md bg-white w-100">
       <form method="dialog" @submit.prevent="saveTechno" class="space-y-4">

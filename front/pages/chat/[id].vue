@@ -97,7 +97,6 @@ onMounted(async () => {
   } catch (error) {
     console.error(error);
   }
-
   // Get messages history
   try {
     const response = await fetch(
@@ -155,18 +154,40 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-for="message in messages" :key="message._id">
-    <div
-      :style="{
-        color: message.idSender === userStore.userRef?.id ? 'red' : 'green',
-      }"
-      class="p-2 rounded-lg"
-    >
-      {{ message.content }}
+  <LandingContainer class="w-3/4">
+    <LandingSectionhead>
+      <template v-slot:title>Chat</template>
+      <template v-slot:desc>&nbsp;</template>
+    </LandingSectionhead>
+    <LandingLink href="/visio" styleName="primary">Entrer en visio</LandingLink>
+    <div v-if="loading" class="flex justify-center items-center">
+      <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </div>
-  </div>
-  <form @submit.prevent="sendMessage">
-    <input v-model="newMessage" placeholder="Type your message..." />
-    <button type="submit">Send</button>
-  </form>
+    <div v-else class="h-screen flex flex-col mt-4">
+      <div class="bg-gray-200 flex-1 overflow-y-scroll">
+          <div class="px-4 py-2">
+            <div v-for="message in messages" :key="message._id">
+              <div v-if="message.idSender === userStore.userRef?.id" class="flex items-center justify-end mb-2">
+                  <div class="bg-blue-500 text-white rounded-lg p-2 shadow max-w-sm">
+                    {{ message.content }}
+                  </div>
+              </div>
+              <div v-else class="flex items-center mb-2">
+                <div class="bg-white rounded-lg p-2 shadow max-w-sm">
+                  {{ message.content }}
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="bg-gray-100 px-4 py-2">
+        <form @submit.prevent="sendMessage" class="flex items-center">
+          <input v-model="newMessage" class="w-full border rounded-full py-2 px-4 mr-2" type="text" placeholder="Type your message...">
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-full" type="submit">
+            Envoyer
+          </button>
+        </form>
+      </div>
+    </div>
+  </LandingContainer>
 </template>

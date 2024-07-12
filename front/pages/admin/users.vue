@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
+import { useToast } from 'vue-toastification';
 
 definePageMeta({
   layout: "landing",
@@ -13,7 +14,9 @@ const newUserModal = ref(null);
 const errorMessage = ref('');
 const userStore = useUserStore();
 const searchQuery = ref('');
-
+const toast = useToast();
+const currentPage = ref(1);
+const totalPages = ref(1);
 
 const openUserModal = (user) => {
   Object.assign(selectedUser, user);
@@ -34,9 +37,9 @@ const closeNewUserModal = () => {
   newUserModal.value.close();
 };
 
-const loadUserList = async () => {
+const loadUserList = async (page = 1) => {
   try {
-    const response = await fetch('http://localhost:3000/api/users?search=' + searchQuery.value, {
+    const response = await fetch(`http://localhost:3000/api/users?page=${page}?search=${searchQuery.value}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${userStore.tokenRef}`,
@@ -47,11 +50,15 @@ const loadUserList = async () => {
     if (response.ok) {
       const data = await response.json();
       users.value = data.results;
+      currentPage.value = data.page;
+      totalPages.value = data.totalPages;
     } else {
       const data = await response.json();
+      toast.error('Erreur lors du chargement de la liste des utilisateurs');
       console.log(data.message);
     }
   } catch (error) {
+    toast.error('Erreur lors du chargement de la liste des utilisateurs');
     console.error(error);
   }
 }
@@ -66,7 +73,9 @@ const deleteUser = async (user) => {
       },
     });
     loadUserList();
+    toast.success('Utilisateur supprimé avec succès');
   } catch (error) {
+    toast.error('Erreur lors de la suppression de l\'utilisateur');
     console.error('Error deleting user:', error);
   }
 };
@@ -106,12 +115,15 @@ const saveUser = async () => {
     if (response.ok) {
       loadUserList();
       userDialog.value.close();
+      toast.success('Utilisateur modifié avec succès');
     } else {
       const data = await response.json();
+      toast.error('Erreur lors de la modification de l\'utilisateur');
       errorMessage.value = data.message;
     }
   } catch (error) {
     console.error(error);
+    toast.error('Erreur lors de la modification de l\'utilisateur');
     errorMessage.value = 'Error saving user: ', error;
   }
 };
@@ -139,12 +151,15 @@ const addUser = async () => {
     if (response.ok) {
       loadUserList();
       newUserModal.value.close();
+      toast.success('Utilisateur crée avec succès');
     } else {
       const data = await response.json();
+      toast.error('Erreur lors de la création de l\'utilisateur');
       errorMessage.value = data.message;
     }
   } catch (error) {
     console.error(error);
+    toast.error('Erreur lors de la création de l\'utilisateur');
     errorMessage.value = 'Error registering user: ', error;
   }
 };
@@ -178,6 +193,13 @@ onMounted(() => {
         </div>
       </li>
     </ul>
+    <v-pagination 
+        :length="totalPages" 
+        class="my-10" 
+        v-model="currentPage" 
+        @update:model-value="loadUserList"
+      >
+      </v-pagination>
 
     <dialog ref="userDialog" class="p-6 border rounded-md bg-white w-100">
       <form method="dialog" @submit.prevent="saveUser" class="space-y-4">
