@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import type { ITechnology } from '../../back/src/models/technology';
+import type { ITechnology, Technology } from '../../back/src/models/technology';
 import { useToast } from 'vue-toastification';
 
 definePageMeta({
@@ -92,7 +92,7 @@ const saveTechno = async () => {
       },
       body: JSON.stringify(
         {
-        idTechnology: selectedTechno.value,
+          technologyIds: selectedTechno.value,
         }
       ),
     });
