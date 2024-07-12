@@ -85,6 +85,8 @@ const submit = async () => {
         title: title.value,
         messages: [
           {
+            idSender: userStore.userRef?.id,
+            idReceiver: mentor.value?._id,
             title: title.value,
             content: comment.value,
           },
