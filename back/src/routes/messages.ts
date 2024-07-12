@@ -21,9 +21,15 @@ api.get('/:id', roleMiddleware(Role.USER), async (c) => {
 });
 
 api.post('/', roleMiddleware(Role.USER), async (c) => {
-  const { idIssue, title, content } = await c.req.json();
+  const { idIssue, title, content, idSender, idReceiver } = await c.req.json();
+  const loggedUser = c.get('user');
+
+  if (loggedUser.id !== idSender) {
+    return c.json({ message: 'You are not allowed to send messages on behalf of another user' }, 403);
+  }
+
   try {
-    const message = new Message({ idIssue, title, content });
+    const message = new Message({ idIssue, title, content, idSender, idReceiver });
     await message.save();
     return c.json(message, 201);
   } catch (err: any) {
