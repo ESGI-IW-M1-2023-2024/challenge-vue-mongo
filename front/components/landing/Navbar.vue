@@ -38,6 +38,12 @@ const isLogged = ref(false);
 const userStore = useUserStore();
 const toast = useToast();
 
+watch(userStore, () => {
+  if (userStore.userRef) {
+    isLogged.value = true;
+  }
+});
+
 onMounted(async () => {
   try {
     const response = await fetch('http://localhost:3000/api/checkLogin', {
@@ -56,8 +62,8 @@ onMounted(async () => {
   } catch (error) {
     console.error(error);
   }
-});
 
+});
 // gestion du logout qui supprime le token du localstorage
 const logout = () => {
   userStore.tokenRef = '';
