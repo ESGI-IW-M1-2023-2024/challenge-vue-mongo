@@ -206,16 +206,14 @@ api.post('/:id/technologies', roleMiddleware(Role.USER), async (c) => {
   }
 
   technologies.forEach(async (dbTechnology) => {
-    if (
-      user.technologies?.some(
-        (userTechnology) =>
-          dbTechnology.label.toString().toLowerCase() !== userTechnology.label.toString().toLowerCase(),
-      )
-    ) {
+    if (user.technologies?.some((userTechnology) => dbTechnology._id.toString() === userTechnology._id.toString())) {
+      console.info('Technologie déjà ajouté');
+    } else {
       user.technologies?.push(dbTechnology);
       await user.save();
     }
   });
+
   return c.json(user, 200);
 });
 
