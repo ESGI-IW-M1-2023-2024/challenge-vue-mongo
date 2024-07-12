@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import type { ITechnology } from '../../back/src/models/technology';
+import { useToast } from 'vue-toastification';
 
 definePageMeta({
   layout: "landing",
@@ -9,6 +10,7 @@ definePageMeta({
 const errorMessage = ref('');
 const password = ref('');
 const userStore = useUserStore();
+const toast = useToast();
 const allTechnologies = ref<ITechnology[]>([]);
 
 interface User {
@@ -33,7 +35,7 @@ const user = ref<User>({
   technologies: [],
 });
 
-const selectedTechno = ref<ITechnology[]>([]);
+const selectedTechno = ref<string[]>([]);
 
 onMounted(async () => {
   try {
@@ -55,7 +57,9 @@ onMounted(async () => {
   } catch (error) {
     console.error(error);
   }
-  console.log(user.value.technologies);
+  user.value.technologies?.forEach(techno => {
+    selectedTechno.value.push('' + techno._id);
+  });
 
   try {
     const response = await fetch('http://localhost:3000/api/technologies?pagination=false', {
@@ -68,7 +72,7 @@ onMounted(async () => {
 
     if (response.ok) {
       const data = await response.json();
-      allTechnologies.value = data.results;
+      allTechnologies.value = data;
     } else {
       const data = await response.json();
       console.log(data.message);
@@ -76,8 +80,34 @@ onMounted(async () => {
   } catch (error) {
     console.error(error);
   }
-  console.log(allTechnologies.value);
 })
+
+const saveTechno = async () => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/users/${userStore.userRef?.id}/technologies`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${userStore.tokenRef}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(
+        {
+        idTechnology: selectedTechno.value,
+        }
+      ),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+    } else {
+      const data = await response.json();
+      errorMessage.value = data.message;
+    }
+  } catch (error) {
+    console.error(error);
+    errorMessage.value = 'An error occurred. Please try again later.';
+  }
+};
 
 const handleSubmit = async () => {
   try {
@@ -109,8 +139,10 @@ const handleSubmit = async () => {
 
     if (response.ok) {
       const data = await response.json();
+      toast.success('Enregistrement réussi');
     } else {
       const data = await response.json();
+      toast.error('Erreur lors de l\'enregistrement');
       errorMessage.value = data.message;
     }
   } catch (error) {
@@ -180,14 +212,12 @@ const handleSubmit = async () => {
           placeholder="Bio"
           class="w-full p-2 border rounded"
           name="biography"
+          style="height: 200px;"
         >
         </textarea>
       </div>
       <div class="mb-5">
-        <label for="technologies">Technologies:</label>
-        <select multiple v-model="selectedTechno" id="technologies" class="w-full p-2 border rounded" name="technologies">
-          <option v-for="technology in allTechnologies" :value="technology" :selected="selectedTechno.includes(technology)">{{ technology.label }}</option>
-        </select>
+        <v-select label="Technologies" v-model="selectedTechno" :items="allTechnologies" item-title="label" item-value="_id" multiple chips />
       </div>
       <div class="mb-3">
         <input
