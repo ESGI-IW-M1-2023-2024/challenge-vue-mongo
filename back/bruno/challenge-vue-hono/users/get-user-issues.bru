@@ -1,0 +1,15 @@
+meta {
+  name: get-user-issues
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{base_url}}/users/issues
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

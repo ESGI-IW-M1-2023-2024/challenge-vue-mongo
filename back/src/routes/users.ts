@@ -5,6 +5,7 @@ import roleMiddleware from '../middleware/role-middleware';
 import { Technology } from '../models/technology';
 import { Comment } from '../models/comment';
 import { genSalt, hash } from 'bcrypt';
+import { Issue } from '../models/issue';
 
 const api = new Hono().basePath('/users');
 
@@ -71,6 +72,12 @@ api.get('/mentors', roleMiddleware(Role.USER), async (c) => {
   } catch {
     c.json({ msg: 'Erreur lors de la récupération des mentors' }, 500);
   }
+});
+
+api.get('/issues', roleMiddleware(Role.ADMIN), async (c) => {
+  const loggedUser = c.get('user');
+  const issues = await Issue.find({ idUser: loggedUser._id });
+  return c.json(issues, 200);
 });
 
 api.get('/:id', roleMiddleware(Role.USER), async (c) => {
