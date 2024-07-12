@@ -6,7 +6,7 @@ definePageMeta({
 });
 
 onMounted(() => {
-  const callFrame = window.Daily.createFrame();
+  const callFrame = window.Daily.createFrame({ showLeaveButton: true });
   callFrame.join({ url: "https://loan.daily.co/u6yHGnWtqpY2GqLuvr8C" });
 });
 </script>
