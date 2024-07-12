@@ -31,6 +31,11 @@ const menuitems = [
     path: '/admin/technologies',
     role: 'admin',
   },
+  {
+    title: 'Mes Tickets',
+    path: '/my-tickets',
+    role: '',
+  },
 ];
 
 const open = ref(false);

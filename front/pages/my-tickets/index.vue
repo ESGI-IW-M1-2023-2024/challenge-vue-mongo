@@ -21,8 +21,12 @@ const fetchIssues = async () => {
 
     if (response.ok) {
       const data = await response.json();
+      const issuesWithMentors = await Promise.all(data.map(async (issue: IIssue) => {
+        const mentor = await fetchUser(issue.idMentor.toString());
+        return { ...issue, mentor };
+      }));
       console.log('réponse', data);
-      issues.value = data;
+      issues.value = issuesWithMentors;
 
       loading.value = false;
     } else {
@@ -77,13 +81,13 @@ onMounted(async () => {
       <v-container v-if="!loading">
         <v-row class="items-stretch">
           <v-col cols="4" v-for="issue of issues" :key="issue._id.toString()">
-            <v-card>
-              {{ fetchUser(issue.idMentor.toString()) }}
+            <v-card class="px-3 py-2 h-full">
+              {{ issue.mentor ? issue.mentor.firstName + ' ' + issue.mentor.lastName : 'Chargement...' }}
               <v-card-title>{{ issue.title }}</v-card-title>
               <v-card-text>{{ issue.description }}</v-card-text>
-              <v-card-text>{{ issue.status }}</v-card-text>
+              <v-card-text>Status : {{ issue.status }}</v-card-text>
               <v-card-actions>
-                <v-btn color="primary" text>Ouvrir</v-btn>
+                <v-btn color="primary">Ouvrir</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
