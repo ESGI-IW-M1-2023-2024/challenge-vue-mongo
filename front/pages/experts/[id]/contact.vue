@@ -5,6 +5,7 @@ import { useUserStore } from '~/stores/user';
 import { useToast } from 'vue-toastification';
 import type { IUser } from '../../../../back/src/models/user';
 import type { ITechnology } from '../../../../back/src/models/technology';
+import type { IMessage } from '../../../../back/src/models/message';
 
 definePageMeta({
   layout: 'landing',
@@ -72,7 +73,14 @@ const submit = async () => {
   }
 
   try {
-    const response = await fetch('http://localhost:3000/api/issues', {
+    const message = {
+      idSender: userStore.userRef?.id,
+      idReceiver: mentor.value?._id,
+      title: title.value,
+      content: comment.value,
+    };
+
+    const responseIssue = await fetch('http://localhost:3000/api/issues', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${userStore.tokenRef}`,
@@ -83,23 +91,43 @@ const submit = async () => {
         idMentor: mentor.value?._id,
         technologies: technologies,
         title: title.value,
-        messages: [
-          {
-            idSender: userStore.userRef?.id,
-            idReceiver: mentor.value?._id,
-            title: title.value,
-            content: comment.value,
-          },
-        ],
+        messages: [message],
       }),
     });
 
-    if (response.ok) {
+    if (!responseIssue.ok) {
+      toast.error('Une erreur est survenue');
+      const data = await responseIssue.json();
+      console.error(data);
+      return;
+    }
+
+    const data = await responseIssue.json();
+    const newMessage = {
+      idIssue: data._id,
+      idSender: message.idSender,
+      idReceiver: message.idReceiver,
+      title: message.title,
+      content: message.content,
+    };
+
+    console.log(newMessage);
+
+    const responseMessage = await fetch('http://localhost:3000/api/messages', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${userStore.tokenRef}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newMessage),
+    });
+
+    if (responseMessage.ok) {
       toast.success('Votre demande a bien été envoyée');
       navigateTo('/experts/' + idMentor);
     } else {
       toast.error('Une erreur est survenue');
-      const data = await response.json();
+      const data = await responseMessage.json();
       console.error(data);
     }
   } catch (error) {
