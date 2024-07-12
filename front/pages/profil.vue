@@ -99,12 +99,15 @@ const saveTechno = async () => {
 
     if (response.ok) {
       const data = await response.json();
+      toast.success('Enregistrement réussi');
     } else {
       const data = await response.json();
+      toast.error('Erreur lors de l\'enregistrement');
       errorMessage.value = data.message;
     }
   } catch (error) {
     console.error(error);
+    toast.error('Erreur lors de l\'enregistrement');
     errorMessage.value = 'An error occurred. Please try again later.';
   }
 };
@@ -139,7 +142,7 @@ const handleSubmit = async () => {
 
     if (response.ok) {
       const data = await response.json();
-      toast.success('Enregistrement réussi');
+      await saveTechno();
     } else {
       const data = await response.json();
       toast.error('Erreur lors de l\'enregistrement');
@@ -147,6 +150,7 @@ const handleSubmit = async () => {
     }
   } catch (error) {
     console.error(error);
+    toast.error('Erreur lors de l\'enregistrement');
     errorMessage.value = 'An error occurred. Please try again later.';
   }
 };
